@@ -1,0 +1,31 @@
+{
+  "name": "StyleMarketplace",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "@prisma/client": "^7.3.0",
+    "@types/express": "^5.0.6",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "prisma": "^7.3.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx ts-node-dev --transpile-only --no-notify src/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.3.0",
+    "pg": "^8.18.0"
+  },
+  "overrides": {
+    "lodash": "^4.17.21",
+    "hono": "^4.11.7"
+  }
+}
