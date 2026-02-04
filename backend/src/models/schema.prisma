@@ -34,7 +34,7 @@ model User{
   //seja criada junta que ta show(eu acho)
 
   wishList WishList?
-  //cart Cart?
+  // cart Cart?
 }
 
 model WishList{
@@ -47,6 +47,56 @@ model WishList{
   //product WishListProduct[]
 }
 
+model Cart{
+  subtotal  Float @default(0)
+  savings   Float @default(0)
+  shipping  Float @default(0)
+  tax       Float @default(0)
+  promoCode String?
+  totalCost Float @default(0)
+
+  userId Int @id
+  // user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // so retirar documentacao do user
+  products cartProduct[]
+}
+
+model cartProduct{
+  cartId Int
+  cart Cart @relation(fields: [cartId], references: [userId], onDelete: Cascade)
+
+  variantId Int
+  // variant Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+@@id([cartId, variantId])
+}
+
+
+
+model Order{
+  id          Int @id @default(autoincrement())
+  time        DateTime @default(now())
+  address     String
+  rastreio    String
+  situation   String
+  totalPrice  Float
+
+  userId Int
+  // user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  products orderProduct[]
+  
+}
+
+model orderProduct{
+
+  orderId Int
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  variantId Int
+  // variant Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+@@id([orderId, variantId])
 
 model Product {
   id Int @id @default(autoincrement())
