@@ -1,4 +1,6 @@
 import { ButtonIntegration } from "./ButtonIntegration"
+import { InputText } from "./InputText"
+
 
 export function EntranceBox() {
     return (
@@ -50,7 +52,7 @@ export function EntranceBox() {
                             <ButtonIntegration icone="src/assets/icons/facebookLogo.svg" texto="Continue with Facebook" link="/facebook" />
 
                         </div>
-                        
+
                         <div className="w-full relative flex items-center justify-center gap-[12px]">
 
                             <div className="absolute flex items-center w-full  z-1">
@@ -62,6 +64,7 @@ export function EntranceBox() {
                             </div>
                             
                         </div>
+                        <InputText icone="./src/assets/icons/emailIcon.svg" texto="Email Address" isPassword={false}/>
 
 
                     </div>
