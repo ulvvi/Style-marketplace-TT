@@ -1,5 +1,6 @@
 import { ButtonIntegration } from "./ButtonIntegration"
 import { InputText } from "./InputText"
+import { Link } from "react-router"
 
 
 export function EntranceBox() {
@@ -65,6 +66,10 @@ export function EntranceBox() {
                             
                         </div>
                         <InputText icone="./src/assets/icons/emailIcon.svg" texto="Email Address" isPassword={false}/>
+                        <div className="relative flex items-end w-full">
+                            <InputText icone="./src/assets/icons/passwordIcon.svg" texto="Password" isPassword={true}/>    
+                        <Link className="absolute right-0 top-0 text-[12px] text-[14px]" to="/forgot-password">Forgot Password?</Link>
+                        </div>
 
 
                     </div>
