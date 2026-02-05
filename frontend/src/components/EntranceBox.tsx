@@ -50,6 +50,18 @@ export function EntranceBox() {
                             <ButtonIntegration icone="src/assets/icons/facebookLogo.svg" texto="Continue with Facebook" link="/facebook" />
 
                         </div>
+                        
+                        <div className="w-full relative flex items-center justify-center gap-[12px]">
+
+                            <div className="absolute flex items-center w-full  z-1">
+                                <hr className="w-full border-t border-gray-300" />
+                            </div>
+
+                            <div className="pr-[8px] pl-[8px] z-10 bg-white items-center justify-center flex">
+                                <span className="text-tertiary text-[12px] ">OR CONTINUE WITH EMAIL</span>
+                            </div>
+                            
+                        </div>
 
 
                     </div>
