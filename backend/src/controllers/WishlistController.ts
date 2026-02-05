@@ -11,7 +11,12 @@ export class Wishlist{
             const wishlist = await prisma.wishlist.findUnique({
                 where:{
                     userId: parseInt(id as string)
+                },
+                /*
+                include:{
+                    product:true
                 }
+                */
             })
             res.status(200).json(wishlist);
         } catch (error:any) {
@@ -41,19 +46,29 @@ export class Wishlist{
     //n tenho certeza se ta certo pq n consegui testar por n ter as models necessarias nessa branch
     /*
     public static async addToWishlist(req:Request, res: Response){
-        const {id} = req.params;
-        const {productId} = req.body;
-        const added = await prisma.wishlist.update({
-            where:{
-                userId: parseInt(id as string)
-            },
-            data:{
-                product:{
-                    create:{
-                        productId: productId
+        try {
+            const {id} = req.params;
+            const {productId} = req.body;
+            const added = await prisma.wishlist.update({
+                where:{
+                    userId: parseInt(id as string)
+                },
+                data:{
+                    product:{
+                        create:{
+                            productId: productId
+                        }
                     }
+                },
+                include:{
+                    product:true
                 }
-            }
-        })
-    }*/
+            })
+            res.status(200).json(added);
+        } catch (error:any) {
+            res.status(500).json({message: error.message})
+        }
+
+    }
+    */
 }
