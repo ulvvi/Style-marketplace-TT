@@ -4,7 +4,7 @@ import {Prisma} from "../generated/prisma/client";
 
 export class UserController{
     //ato de cadastro
-    public static async SignUp(req: Request, res: Response){
+    public static async signUp(req: Request, res: Response){
         try {
             const {firstName, lastName, email, marketingEmail} = req.body;
             const createData: Prisma.UserCreateInput = {
@@ -12,7 +12,7 @@ export class UserController{
                 lastName: lastName,
                 email: email,
                 marketingEmail: marketingEmail,
-                wishList: {create:{}}
+                wishlist: {create:{}}
                 //Cart: {create:{}}
             }
             const createdUser = await prisma.user.create({

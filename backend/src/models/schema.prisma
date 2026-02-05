@@ -37,18 +37,18 @@ model User{
   newArrival Boolean @default(false)
   saleAlert Boolean @default(false)
   
-  wishList WishList?
+  wishlist Wishlist?
   //cart Cart?
 }
 
-model WishList{
+model Wishlist{
   id Int @id @default(autoincrement())
   quantity Int @default(0)
 
   userId Int @unique
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  //product WishListProduct[]
+  //product WishlistProduct[]
 }
 
 
