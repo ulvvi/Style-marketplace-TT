@@ -1,3 +1,5 @@
+import { ButtonIntegration } from "./ButtonIntegration"
+
 export function EntranceBox() {
     return (
         <>
@@ -42,7 +44,15 @@ export function EntranceBox() {
                             
                         </div>
                     </div>
-                    
+                    <div className="flex flex-col items-center justify-center gap-[24px] w-full pb-[24px] pl-[24px] pr-[24px]">
+                        <div className="w-full  gap-[12px] flex flex-col items-center justify-center">
+                            <ButtonIntegration icone="src/assets/icons/googleLogo.svg" texto="Continue with Google" link="/google" />
+                            <ButtonIntegration icone="src/assets/icons/facebookLogo.svg" texto="Continue with Facebook" link="/facebook" />
+
+                        </div>
+
+
+                    </div>
                 </div>
 
             </div>
