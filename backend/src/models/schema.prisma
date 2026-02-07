@@ -144,7 +144,7 @@ model Variant {
 }
 
 model Review {
-  id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement()) // Não está presente na modelagem, porém acho necesário (sem id, só seria possível fazer um createReview e readAllReview de um produto específico)
   rating Float
 
   productId Int @unique
