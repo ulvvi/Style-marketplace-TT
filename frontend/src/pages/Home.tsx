@@ -13,6 +13,9 @@ export function Home() {
                 <Hero />
                 <InfoBar />
                 <CategorySection />
+                <FeatureProducts />
+                <Footer />
+
             </div>  
         </>
     )
