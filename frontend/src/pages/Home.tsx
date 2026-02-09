@@ -10,6 +10,7 @@ export function Home() {
         <>
             <div className="flex flex-col mg-0">
                 <Header />
+                <Hero />
             </div>  
         </>
     )
