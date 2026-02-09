@@ -108,11 +108,8 @@ export function EntranceBoxExtended() {
 
                     </div>
                 </div>
-                
-                
+                                
             </div>
-
-
 
         </>
     )

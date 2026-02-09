@@ -9,7 +9,7 @@ interface InputTextProps {
 }
 
 export function InputText({
-    icone = <div className="w-6 h-6 bg-gray-200 rounded-full" />,
+    icone,
     texto = "Enter your text",
     isPassword = false,
     label = "Field Name"
@@ -49,7 +49,7 @@ export function InputText({
                         <img
                             src={isClicked ? "src/assets/icons/showPassTrue.svg" : "src/assets/icons/showPassFalse.svg"} 
                             alt="Toggle Password"
-                            className="w-[24px] h-[24px]"
+                            className="w-[24px] h-[24px] hover:bg-[#6b728017]"
                         />
                     </button>
                 )}
