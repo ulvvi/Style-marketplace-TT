@@ -28,19 +28,15 @@ enum OrderStatus {
 model User{
   id Int @id @default(autoincrement())
   firstName String
-  lastName String?
-  email String? @unique
-
-  salt String
-  hash String
-  
+  lastName String
+  email String @unique
   gender Gender?
   phoneNumber String?
   dateBirth DateTime?
-  preferences Boolean? 
-  totalOrders Int? @default(0)
-  totalRating Float? @default(0)
-  totalWishlist Int? @default(0)
+  preferences Boolean[] @default([true, false, false, true, false, false])
+  totalOrders Int @default(0)
+  totalRating Float @default(0)
+  totalWishlist Int @default(0)
 
   wishList Wishlist?
   cart Cart?
