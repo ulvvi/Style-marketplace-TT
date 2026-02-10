@@ -1,17 +1,22 @@
 import { Request, Response } from "express";
 import { prisma } from "../config/prisma";
 import {Prisma} from "../generated/prisma/client";
+import auth from "../config/auth";
 
 export class UserController{
     //ato de cadastro
     public static async signUp(req: Request, res: Response){
         try {
-            const {firstName, lastName, email, marketingEmail} = req.body;
+            const {firstName, lastName, email, marketingEmail, password} = req.body;
+            const {salt, hash} = auth.generatePassword(password);
             const createData: Prisma.UserCreateInput = {
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
                 marketingEmail: marketingEmail,
+                salt: salt,
+                hash: hash,
+                
                 wishlist: {create:{}}
                 //Cart: {create:{}}
             }
@@ -23,6 +28,31 @@ export class UserController{
         } catch (error:any) {
             res.status(500).json({message: error.message});
         }
+    }
+
+    public static async signIn(req: Request, res: Response){
+        try{
+            const {email, password} = req.body;
+            const user = await prisma.user.findUnique({
+                where:{
+                    email: email
+                }
+            })
+            if(!user){
+                return res.status(401).json({message: "Email ou senha incorretos"})
+                
+            }
+            const authorized = auth.checkPassword(password, user.hash, user.salt);
+            if(!authorized){
+                return res.status(401).json({message: "Email ou senha incorretos"})
+                
+            }
+            const token = auth.generateJWT(user.id);
+            return res.status(200).json({token: token});
+        }catch(error:any){
+            res.status(500).json({message: error.message})
+        }
+        
     }
 
     public static async readUser(req: Request, res: Response){
@@ -56,7 +86,6 @@ export class UserController{
                 smsNotification, marketingEmail, orderUpdate, newArrival, 
                 saleAlert} = req.body;
             const {id} = req.params;
-            
             const updateData: Prisma.UserUpdateInput = {
                 firstName: firstName,
                 lastName: lastName,

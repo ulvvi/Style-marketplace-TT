@@ -23,6 +23,8 @@ model User{
   firstName String
   lastName String
   email String @unique
+  hash String
+  salt String
   gender Gender?
   phoneNumber String?
   dateBirth DateTime?
