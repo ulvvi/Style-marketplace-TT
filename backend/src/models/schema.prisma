@@ -30,6 +30,8 @@ model User{
   firstName String
   lastName String
   email String @unique
+  hash String
+  salt String
   gender Gender?
   phoneNumber String?
   dateBirth DateTime?
@@ -43,10 +45,10 @@ model User{
   orderUpdate Boolean @default(true)
   newArrival Boolean @default(false)
   saleAlert Boolean @default(false)
-  
+
   wishlist Wishlist?
   cart Cart?
-  order Order[]
+  orders Order[]
 }
 
 model Wishlist{
