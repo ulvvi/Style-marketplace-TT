@@ -35,7 +35,7 @@ router.put("/user/:id/wishlist",
 router.put("/user/:id/wishlist/add",
     authenticateJWT, 
     ensureOwner, 
-    Wishlist.updateWishlist);
+    Wishlist.addToWishlist);
 
 
 export default router
