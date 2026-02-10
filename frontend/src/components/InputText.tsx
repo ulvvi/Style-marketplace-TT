@@ -7,6 +7,7 @@ interface InputTextProps {
     isPassword?: boolean;
     label?: string;
     inputClassName?: string;
+    containerClassName?: string;
 }
 
 export function InputText({
@@ -14,6 +15,7 @@ export function InputText({
     texto = "Enter your text",
     isPassword = false,
     label,
+    containerClassName,
     inputClassName
 }: InputTextProps) {
 
@@ -30,7 +32,7 @@ export function InputText({
 
     return (
         <div className="w-full gap-[12px] flex flex-col items-start justify-center">
-            <label className="text-[14px] text-primary font-medium block">
+            <label className={`text-[14px] text-primary font-medium ${label === undefined ? "hidden" : "block"}`}>
                 {label}
             </label>
                 
