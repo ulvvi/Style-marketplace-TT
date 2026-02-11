@@ -1,6 +1,7 @@
 import { Header } from "../components/Header";
 import { Breadcrumbs } from "../components/productInfo/Breadcrumbs";
 import { ProductGallery } from "../components/productInfo/ProductGallery";
+import { ProductPurchasePanel } from "../components/productInfo/ProductPurchasePanel";
 
 export function ProductInfo() {
     const productPaths = [
@@ -13,6 +14,7 @@ export function ProductInfo() {
             <main className="flex flex-col mg-0 px-4 py-8">
                 <Breadcrumbs items={productPaths} />
                 <ProductGallery />
+                <ProductPurchasePanel />
             </main>  
         </>
     )
