@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../config/prisma";
-import {Prisma} from "../generated/prisma/client";
+import { Prisma } from "../generated/prisma/client";
 import auth from "../config/auth";
 
 export class UserController{

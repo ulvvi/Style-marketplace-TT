@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../config/prisma";
-import {Prisma} from "../generated/prisma/client";
+import { Prisma } from "../generated/prisma/client";
 
 //obs: o id que to usando nas querys é do usuario
 export class Wishlist{
