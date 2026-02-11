@@ -3,15 +3,16 @@ import { BrowserRouter } from "react-router"
 import { Home } from './pages/Home'
 import './App.css'
 import { BrowserRouter } from 'react-router-dom'
-import { EntranceBox } from './components/EntranceBox'
-import { SignIn } from './pages/signIn'
+import { EntranceBoxExtended } from './components/EntranceBoxExtended'
+import { SignUp } from './pages/signUp'
 
 function App() {
+
   return (
     <>
-    <BrowserRouter>
-      <Home/>
-    </BrowserRouter>
+      <BrowserRouter>
+        <SignUp />
+      </BrowserRouter>
     </>
   )
 }
