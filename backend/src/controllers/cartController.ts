@@ -14,7 +14,7 @@ export class cartController {
                 return res.status(404).json({ error: "Variante não encontrada." });
             }
             
-            const updatedCart = await prisma.$transaction(async (tx) => {
+            const updatedCart = await prisma.$transaction(async (tx:any) => {
 
                 await tx.cartVariant.create({
                     data: {
@@ -52,7 +52,7 @@ export class cartController {
                 return res.status(404).json({ error: "Variante não encontrada." });
             }
 
-            const updatedCart = await prisma.$transaction(async (tx) => {
+            const updatedCart = await prisma.$transaction(async (tx:any) => {
 
                 const removedVariantToCart = await tx.cartVariant.deleteMany({
                     where: {

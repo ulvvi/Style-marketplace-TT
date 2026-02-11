@@ -19,7 +19,7 @@ export class orderController {
                 }
             });
 
-            const order = await prisma.$transaction(async (tx) => {
+            const order = await prisma.$transaction(async (tx:any) => {
 
                 const createdOrder = await tx.order.create({
                     data: {
@@ -28,7 +28,7 @@ export class orderController {
                         situation: "PROCESSING",
                         totalPrice: cart.totalCost,
                         variants: { 
-                            create: cart.cartVariants.map(cartVariant => ({
+                            create: cart.cartVariants.map((cartVariant: any) => ({
                                 variantId: cartVariant.variantId,
                                 unitPrice: cartVariant.variant.price,
                                 quantity: 1
@@ -77,6 +77,21 @@ export class orderController {
         } catch (error) {
             res.status(500).json({ error: "Internal server error.", message: error });
         }
+    }
+
+    public static async updateSituation (req: Request, res: Response) {
+        const { orderId } = req.params;
+        const { situation } = req.body;
+        try {
+            const updatedOrder = await prisma.order.update({
+                where: { id: Number(orderId) },
+                data: { situation: situation }
+            });
+            res.status(200).json(updatedOrder);
+        } catch (error) {
+            res.status(500).json({ error: "Internal server error.", message: error });
+        }
+
     }
 
     
