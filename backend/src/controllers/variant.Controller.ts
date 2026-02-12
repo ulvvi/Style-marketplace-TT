@@ -33,6 +33,7 @@ export class variantController {
     try {
       const { productId } = request.params; // Ver todas as variantes de um produto específico
 
+
       const foundAllVariant = await prisma.product.findMany({ // mais prática de fazer a operação usando a model Product para ver todos seus variantes
         where: { id: parseInt(productId as string) },
         include: {variant: true}

@@ -1,6 +1,6 @@
 import { Request, response, Response } from "express";
 import { prisma } from "../config/prisma";
-import {Prisma} from "../generated/prisma/client";
+import { Prisma } from "../generated/prisma/client";
 import auth from "../config/auth";
 import validate from "../config/validate"; 
 import z from "zod";
@@ -68,6 +68,8 @@ export class UserController{
             const user = await prisma.user.findUnique({
                 where:{
                     id: parseInt(id as string) //garantir q o id seja int, ja q nos params ele é string
+                },
+                include:{
                 }
             })
             res.status(200).json(user);
