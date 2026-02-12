@@ -1,4 +1,5 @@
 import { ProductHeader } from "./ProductHeader";
+import { PurchaseActionButtons } from "./PurchaseActionButtons";
 import { VariantContainer } from "./VariantContainer";
 
 export function ProductPurchasePanel() {
@@ -9,6 +10,10 @@ export function ProductPurchasePanel() {
                 <ProductHeader />
                 <hr className=" border-(--border-primary)"/>
                 <VariantContainer colors={productColors}/>
+                <hr className=" border-(--border-primary)"/>
+                <PurchaseActionButtons/>
+                <hr className=" border-(--border-primary)"/>
+                
             </section>
         </>
     )
