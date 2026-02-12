@@ -29,6 +29,7 @@ export class variantController {
 
       const foundAllVariant = await prisma.variant.findMany({
         where: { productId: parseInt(productId as string) },
+        include: { product: true },
       });
 
       response.status(200).json(foundAllVariant);

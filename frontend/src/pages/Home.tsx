@@ -15,7 +15,6 @@ export function Home() {
                 <CategorySection />
                 <FeatureProducts />
                 <Footer />
-
             </div>  
         </>
     )

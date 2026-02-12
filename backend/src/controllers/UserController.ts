@@ -61,6 +61,8 @@ export class UserController{
             const user = await prisma.user.findUnique({
                 where:{
                     id: parseInt(id as string) //garantir q o id seja int, ja q nos params ele é string
+                },
+                include:{
                 }
             })
             res.status(200).json(user);
