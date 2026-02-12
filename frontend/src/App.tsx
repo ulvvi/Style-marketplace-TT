@@ -4,13 +4,15 @@ import './App.css'
 import { BrowserRouter } from 'react-router-dom'
 import { EntranceBoxExtended } from './components/EntranceBoxExtended'
 import { SignUp } from './pages/signUp'
+import { SignIn } from './pages/signIn'
+import { Sales } from './pages/Sales'
 
 function App() {
 
   return (
     <>
       <BrowserRouter>
-        <SignUp />
+        <Sales/>
       </BrowserRouter>
     </>
   )
