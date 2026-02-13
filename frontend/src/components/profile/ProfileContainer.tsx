@@ -19,10 +19,10 @@ export function ProfileContainer ({orders = 3,wishlist = 4,rating = 4.8}:Profile
             
                 <ContentBox title="Personal Information" buttonColor="white" buttonName="Cancel" buttonIconSrc="src/assets/icons/pencilIcon.svg" buttonIconPos="left" buttonIconAlt="pencil" buttonLink="/" >
                 <div className="w-full gap-[24px] flex flex-col lg:grid lg:grid-cols-2">
-                    <InputText label="First Name" type="text" textClassName="text-primary"/>
-                    <InputText label="Last Name" type="text" textClassName="text-primary"/>
-                    <InputText label="Email" type="email" textClassName="text-primary"/>
-                    <InputText label="Phone" type="tel" textClassName="text-primary"/>
+                    <InputText label="First Name" type="text" textClassName="text-primary" texto="Enter your First Name"/>
+                    <InputText label="Last Name" type="text" textClassName="text-primary" texto="Enter your Last Name"/>
+                    <InputText label="Email" type="email" textClassName="text-primary" texto="Enter your Email"/>
+                    <InputText label="Phone" type="tel" textClassName="text-primary" texto="Enter your Phone Number"/>
                     <InputText label="Date of Birth" type="date" textClassName="text-primary"/>
                     <InputText label="Gender" texto="Gender" textClassName="text-primary" options={[
                         {label: "Male", value:"male"},
