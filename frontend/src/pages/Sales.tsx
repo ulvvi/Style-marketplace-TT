@@ -4,6 +4,7 @@ import { SalesHero } from "../components/Sales/SalesHero";
 
 import { SalesStats } from "../components/Sales/SalesStats";
 import { Filter } from "../components/Sales/Filter";
+import { ProductSection } from "../components/Sales/ProductSection";
 
 export function Sales(){
     return(
@@ -13,6 +14,7 @@ export function Sales(){
             <SalesStats maxDiscount={70} totalItens={500} timeLeft={48} shippingDiscount={100}/>
             <section className="w-full px-4">
                 <Filter/>
+                <ProductSection/>
             </section>
         </>
     )

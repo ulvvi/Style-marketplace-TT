@@ -2,7 +2,7 @@ import { ProductCard } from "../ProductCard"
 
 export function ProductSection(){
     return(
-        <div>
+        <div className="py-6">
             {/**div de sale items  */}
             <div>
                 
@@ -13,7 +13,8 @@ export function ProductSection(){
 
                 </div>
             </div>
-            <ProductCard/>
+            <ProductCard title="Premium Cotton T-Shirt" ratingAvg={4.8} ratingQuantity={124} currentPrice={29} cardStyle="Sales" category="Tops" oldPrice={49} productBadge={36}/>
+            
         </div>
     )
 }
