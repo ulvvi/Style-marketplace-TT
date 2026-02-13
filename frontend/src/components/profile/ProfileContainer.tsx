@@ -13,7 +13,9 @@ export function ProfileContainer ({orders = 3,wishlist = 4,rating = 4.8}:Profile
     return(
         <>
         <div className="w-full flex flex-col gap-[8px] w-full">
-            <TabList/>
+            <TabList texto1="Profile" src1="src/assets/icons/ProfileSmallIcon.svg" alt1="Profile"
+                     texto2="Orders"  src2="src/assets/icons/PackageSmallIcon.svg" alt2="Package"
+                     texto3="Settings" src3="src/assets/icons/SettingsIcon.svg" alt3="Settings"/>
             <div className="flex flex-col gap-[24px]">
 
             
