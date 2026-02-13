@@ -21,7 +21,7 @@ export function PersonCardName ({
     }: PersonCardName) {
     return(
         <>
-            <div className="flex justify-start gap-[24px] items-center self-start">
+            <div className="flex justify-start gap-[24px] items-center self-start w-full">
                 {photo}
                 <div className="flex flex-col ">
                     <div>

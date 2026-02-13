@@ -12,12 +12,12 @@ interface ProfileContainerProps {
 export function ProfileContainer ({orders = 3,wishlist = 4,rating = 4.8}:ProfileContainerProps){
     return(
         <>
-        <div className="w-full flex flex-col gap-[8px]">
+        <div className="w-full flex flex-col gap-[8px] w-full">
             <TabList/>
             <div className="flex flex-col gap-[24px]">
 
             
-                <ContentBox title="Personal Information" buttonColor="white" buttonName="Cancel" buttonIconPos="left" buttonIconSrc="src/assets/icons/pencilIcon.svg">
+                <ContentBox title="Personal Information" buttonColor="white" buttonName="Cancel" buttonIconSrc="src/assets/icons/pencilIcon.svg" buttonIconPos="left" buttonIconAlt="pencil" buttonLink="/" >
                     <InputText label="First Name" type="text" textClassName="text-primary"/>
                     <InputText label="Last Name" type="text" textClassName="text-primary"/>
                     <InputText label="Email" type="email" textClassName="text-primary"/>
@@ -28,13 +28,8 @@ export function ProfileContainer ({orders = 3,wishlist = 4,rating = 4.8}:Profile
                         {label: "Woman", value:"woman"}
                     ]}/>
                     <div className="flex items-end justify-start w-full pt-[16px] gap-[16px]">
-                        <div className="w-[120px]">
-                            <Button texto="Save Changes" link="/Profile" />    
-                        </div>
-                        <div className="w-[76px]">
-                            <Button texto="Cancel" link="/Profile" color="white" buttonClassName="w-1334"/>
-                        </div>
-                        
+                            <Button texto="Save Changes" link="/Profile" buttonClassName="!w-[120px]"/>    
+                            <Button texto="Cancel" link="/Profile" color="white" buttonClassName="!w-[76px]"/>
                     </div>
                 </ContentBox>
 

@@ -1,7 +1,7 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 import { Button } from '../Button';
 
-interface CardProps extends HTMLAttributes<HTMLDivElement> {
+interface ContentBoxProps extends HTMLAttributes<HTMLDivElement> {
   title?: string;
   children?: ReactNode;
   buttonName?: string;
@@ -10,11 +10,12 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
   buttonIconAlt?: string;
   buttonColor?: "default" | "white" | "red"
   buttonIconPos?: "left" | "right"
+  buttonClassName?: string;
 }
 
-export function ContentBox({ children,title,buttonName,buttonIconSrc,buttonIconAlt,buttonColor,buttonIconPos,buttonLink, className, ...props }: CardProps) {
+export function ContentBox({ children,title,buttonName,buttonIconSrc,buttonClassName,buttonIconAlt,buttonColor,buttonIconPos,buttonLink, className, ...props }: ContentBoxProps) {
 
-    const showButton = buttonName || buttonIconSrc || buttonLink || buttonIconAlt || buttonIconPos || buttonColor;
+    const showButton = buttonName || buttonLink;
 
   return (
     <div
@@ -26,7 +27,8 @@ export function ContentBox({ children,title,buttonName,buttonIconSrc,buttonIconA
                 {title}
             </h1>    
             {showButton && (
-          <Button className='w-[100px] h-[36px] flex items-center justify-center  cursor-pointer border-[1px] border-(--border-primary) rounded-[10px] border-solid gap-2'
+          <Button 
+          buttonClassName={buttonClassName || '!w-[100px]'}
             texto={buttonName || ''} 
             link={buttonLink || ''}
             iconSrc={buttonIconSrc || ''}
