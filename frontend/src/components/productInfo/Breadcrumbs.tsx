@@ -12,7 +12,7 @@ interface BreadcrumbItem {
 export function Breadcrumbs({items}:BreadcrumbsProps) {
     return (
         <>
-            <nav>
+            <nav className="col-span-full">
                 <ol className="flex gap-2 text-tertiary text-[0.875rem]">
                     <li>
                         <Link to="/">Home</Link>

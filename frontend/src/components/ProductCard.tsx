@@ -17,17 +17,17 @@ export function ProductCard({title="product", ratingAvg=0, ratingQuantity=0, cur
     return (
         <>
             <article className={`border-0 rounded-xl shadow-lg hover:shadow-xl relative
-             ${cardStyle === 'ProductInfo' ? "w-85.75 h-117.75" : "w-89.5 h-122.5 lg:w-79.5 lg:h-112.5"}`}>
+             ${cardStyle === 'ProductInfo' ? "w-85.75 h-117.75 lg:w-110 lg:h-142" : "w-89.5 h-122.5 lg:w-79.5 lg:h-112.5"}`}>
                 <div className={`flex items-center absolute ${badgeColor} py-0.75 px-2.75 rounded-[100rem] h-5.5 top-3 left-3 z-1 
                     ${cardStyle === 'ProductInfo' ? "hidden" : "block"}`}>
                     <span className="text-secondary font-semibold text-[0.75rem]">{productBadge}</span>
                 </div>
                 <div className={` rounded-t-xl overflow-hidden 
-                    ${cardStyle === 'ProductInfo' ? "h-85.75" : "h-89.5 lg:h-79.5"}`}>
+                    ${cardStyle === 'ProductInfo' ? "h-85.75 lg:h-110" : "h-89.5 lg:h-79.5"}`}>
                     <img className="w-full h-full hover:scale-105 object-cover" src={imgSrc} alt={imgAlt}></img>
                 </div>
                 <div className={`bg-secondary rounded-b-xl flex flex-col gap-2 p-4 
-                    ${cardStyle === 'ProductInfo' ? "h-32" : "h-33"}`}>
+                    ${cardStyle === 'ProductInfo' ? "h-32 lg:" : "h-33"}`}>
                     <h3 className={`text-primary font-semibold
                         ${cardStyle === 'ProductInfo' ? "text-[1rem]" : "text-[1.125rem]"}`}>{title}</h3>
                     <div className="text-[0.875rem] flex items-center gap-1">

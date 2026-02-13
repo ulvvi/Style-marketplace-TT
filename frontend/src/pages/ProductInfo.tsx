@@ -13,12 +13,14 @@ export function ProductInfo() {
     return (
         <>
             <Header />
-            <main className="flex flex-col mg-0 px-4 py-8">
-                <Breadcrumbs items={productPaths} />
-                <ProductGallery />
-                <ProductPurchasePanel />
-                <ProductInfoTabs />
-                <RelatedProducts />
+            <main className="flex justify-center">
+                <div className="grid grid-cols-2 gap-x-12 mg-0 px-4 py-8 lg:max-w-350">
+                    <Breadcrumbs items={productPaths} />
+                    <ProductGallery />
+                    <ProductPurchasePanel />
+                    <ProductInfoTabs />
+                    <RelatedProducts />
+                </div>
             </main>  
         </>
     )
