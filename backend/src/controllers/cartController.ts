@@ -8,13 +8,24 @@ export class cartController {
         const { variantId } = req.body;
         try {
 
-            const variant = await prisma.variant.findUnique({ where: { id: variantId } });
+            const variant = await prisma.variant.findUnique({ where: { id: variantId }, include: { product: true } });
             
             if (!variant) {
                 return res.status(404).json({ error: "Variante não encontrada." });
             }
             
             const updatedCart = await prisma.$transaction(async (tx:any) => {
+
+                //se a variant ja estiver, simplesmente atualiza a quantidade, caso nao esteja, ele adiciona a variant
+                if(updatedCart.cartVariants.some((cv:any) => cv.variantId === variantId)) {
+                    return tx.cart.update({
+                        where: { userId: userId },
+                        data: {
+                            quantity: { increment: 1 }
+                        },
+                        include: { cartVariants: { include:  { variant: true } }}
+                    });
+                }
 
                 await tx.cartVariant.create({
                     data: {
@@ -26,8 +37,8 @@ export class cartController {
                 return tx.cart.update({
                     where: { userId: userId },
                     data: {
-                        subtotal: { increment: variant.price },
-                        totalCost: { increment: variant.price }
+                        subtotal: { increment: variant.product.price },
+                        totalCost: { increment: variant.product.price }
                     },
                     include: { cartVariants: { include:  { variant: true } }}
                 });
@@ -44,10 +55,11 @@ export class cartController {
         
         const { userId } = req.params;
         const { variantId } = req.body;
+
         try {
             
-            const variant = await prisma.variant.findUnique({ where: { id: variantId } });
-            
+            const variant = await prisma.variant.findUnique({ where: { id: variantId }, include: { product: true } });
+
             if (!variant) {    
                 return res.status(404).json({ error: "Variante não encontrada." });
             }
@@ -68,8 +80,8 @@ export class cartController {
                 return tx.cart.update({
                     where: { userId: userId },
                     data: {
-                        subtotal: { decrement: variant.price },
-                        totalCost: { decrement: variant.price }
+                        subtotal: { decrement: variant.product.price },
+                        totalCost: { decrement: variant.product.price }
                     },
                     include: { cartVariants: { include:  { variant: true } }}
                 });

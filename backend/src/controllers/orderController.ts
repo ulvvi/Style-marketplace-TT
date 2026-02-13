@@ -21,6 +21,10 @@ export class orderController {
 
             const order = await prisma.$transaction(async (tx:any) => {
 
+                if (cart === null || cart.cartVariants.length === 0) {
+                    throw new Error("O carrinho está vazio.");
+                }
+
                 const createdOrder = await tx.order.create({
                     data: {
                         userId: userId,
