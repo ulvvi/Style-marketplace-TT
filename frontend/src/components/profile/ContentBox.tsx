@@ -3,6 +3,7 @@ import { Button } from '../Button';
 
 interface ContentBoxProps extends HTMLAttributes<HTMLDivElement> {
   title?: string;
+  titleClassName?: string;
   titleIconSrc?: string;
   titleIconAlt?: string;
   children?: ReactNode;
@@ -15,7 +16,7 @@ interface ContentBoxProps extends HTMLAttributes<HTMLDivElement> {
   buttonClassName?: string;
 }
 
-export function ContentBox({ children,title,titleIconAlt,titleIconSrc,buttonName,buttonIconSrc,buttonClassName,buttonIconAlt,buttonColor,buttonIconPos,buttonLink, className, ...props }: ContentBoxProps) {
+export function ContentBox({ children,title,titleClassName,titleIconAlt,titleIconSrc,buttonName,buttonIconSrc,buttonClassName,buttonIconAlt,buttonColor,buttonIconPos,buttonLink, className, ...props }: ContentBoxProps) {
 
     const showButton = buttonName || buttonLink;
 
@@ -27,7 +28,7 @@ export function ContentBox({ children,title,titleIconAlt,titleIconSrc,buttonName
         <div className="flex justify-between items-center w-full ">
           <div className='flex items-center justify-center gap-[6px] '>
             <img src={titleIconSrc} alt={titleIconAlt} className={` ${titleIconSrc ? "inline-block" : "hidden"}`}/>
-            <h1 className='font-semibold text-[24px]'>
+            <h1 className={`font-semibold text-[24px] ${titleClassName || ''}`} >
                 {title}
             </h1>    
           </div>
