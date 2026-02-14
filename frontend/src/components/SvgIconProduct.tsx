@@ -8,7 +8,9 @@ interface SvgProps{
 export function SvgIconProduct({path, alt, border, className, color} : SvgProps){
     return(
       
-            <button className={`${border === 'true' ? 'border border-(--border-primary)' : ''} rounded-[0.65rem] p-2.5 ${className} ${color} w-`}>
+            <button  onClick={() => window.location.href=''} 
+                className={`${border === 'true' ? 'border border-(--border-primary)' : ''} rounded-[0.65rem] 
+                p-2.5 ${className} ${color}` }>
                 <img src={path} alt={alt} />
             </button>
      

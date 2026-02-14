@@ -13,7 +13,7 @@ export function Sales(){
             <Header/>
             <SalesHero/>
             <SalesStats maxDiscount={70} totalItens={500} timeLeft={48} shippingDiscount={100}/>
-            <section className="w-full px-4">
+            <section className="w-full px-4 lg:flex lg:justify-center">
                 <Filter/>
                 <ProductSection/>
             </section>

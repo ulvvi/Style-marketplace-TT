@@ -9,7 +9,7 @@ export function ProductSection(){
     return(
         <main className="py-6 flex flex-col gap-6">
             {/**sec de sale items  */}
-            <section className="flex flex-col gap-2 sm:items-center">
+            <section className="flex flex-col gap-2 sm:items-center lg:flex-row lg:justify-between">
                 <div>
                     <h2 className="font-bold text-primary text-2xl">Sale Items</h2>
                     <p className="text-tertiary">{quantityFound} products found</p>
@@ -28,7 +28,7 @@ export function ProductSection(){
                 </div>
             </section>
 
-            <section className="flex flex-col gap-6 items-center">
+            <section className="flex flex-col gap-6 items-center lg:grid lg:grid-cols-3 lg:">
                 <ProductCard title="Premium Cotton T-Shirt" ratingAvg={4.8} ratingQuantity={124} currentPrice={29} cardStyle="Sales" category="Tops" oldPrice={49} productBadge={["Limited Time"]}/>
                 <ProductCard title="Designer Jeans" ratingAvg={4.9} ratingQuantity={89} currentPrice={79} cardStyle="Sales" category="Bottoms" oldPrice={120} productBadge={["Best Seller"]}/>
                 <ProductCard title="Leather Ankle Boots" ratingAvg={4.7} ratingQuantity={203} currentPrice={99} oldPrice={180} cardStyle="Sales" category="Shoes" productBadge={["Flash Sale"]}/>
