@@ -49,7 +49,7 @@ export function ProductCard({title="product", ratingAvg=0, ratingQuantity=0, cur
 
     return (
         <>
-            <article className="w-89.5 h-122.5 border-0 rounded-xl shadow-lg hover:shadow-xl relative
+            <article className="w-89.5 h-auto border-0 rounded-xl shadow-lg hover:shadow-xl relative
             lg:w-79.5 lg:h-112.5">
 
                 {/**div das badges com loop */}
