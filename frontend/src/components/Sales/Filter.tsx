@@ -28,9 +28,9 @@ export function Filter(){
                 </div>
             </ul>
 
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 sm:items-center">
                 <h3 className="font-semibold">Price Range</h3>
-                <select name="" id="" className="rounded-xl border border-(--border-primary)  text-[0.875rem] py-1 px-2 w-full" >
+                <select name="" id="" className="rounded-xl border border-(--border-primary)  text-[0.875rem] py-1 px-2 w-full sm:w-72 " >
                     <option selected value="Opcao1" >All prices</option>
                     <option value="Opcao1">$0~$25</option>
                     <option value="Opcao1">$25~$50</option>

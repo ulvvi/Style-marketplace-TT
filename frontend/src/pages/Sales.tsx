@@ -10,7 +10,7 @@ import { Footer } from "../components/home/Footer";
 export function Sales(){
     return(
         <>
-            <div className="flex flex-col w-full m-0 overflow-x-hidden">
+            <div className="flex flex-col w-full m-0">
                 <Header/>
                 <SalesHero/>
                 <SalesStats maxDiscount={70} totalItens={500} timeLeft={48} shippingDiscount={100}/>
