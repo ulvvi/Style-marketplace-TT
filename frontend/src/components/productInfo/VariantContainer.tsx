@@ -72,7 +72,7 @@ export function VariantContainer({variants}:VariantContainerProps) {
         <>
             <div className="flex flex-col gap-6 my-6">
                 
-                <div className={`flex gap-2 items-center ${currentVariant ? "block" : "hidden"}`}>
+                <div className={`flex gap-2 items-center ${currentVariant ? "visible" : "invisible"}`}>
                     <div className={`w-3 h-3 bg-[#22C55E] rounded-full`}></div>
                     <span className={`font-semibold text-[#16A34A]`}>In Stock ({currentVariant?.stock} left)</span>
                 </div>
