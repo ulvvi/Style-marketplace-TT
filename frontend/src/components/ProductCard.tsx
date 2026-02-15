@@ -7,14 +7,14 @@ type badgeType = 'Best Seller' | 'New' | 'Sale' | 'Premium' | 'Limited Time'
 interface ProductCardProps {
     title: string;
     ratingAvg: number;
-    ratingQuantity: number;
+    ratingQuantity?: number;
     currentPrice: number;
     oldPrice?: number;
     category?: 'Tops'| 'Bottoms' | 'Dresses' | 'Shoes' | 'Acessories';
     productBadge?: badgeType[]
     
 
-    cardStyle?: 'Home' | 'Sales'| 'Wishlist';
+    cardStyle?: 'Home' | 'Sales'| 'Wishlist' |  'ProductInfo';
     imgSrc?: string;
     imgAlt?: string;
 }
@@ -25,12 +25,13 @@ export function ProductCard({title="product", ratingAvg=0, ratingQuantity=0, cur
     const isHome = cardStyle === 'Home'
     const isSales = cardStyle === 'Sales'
     const isWishlist = cardStyle === 'Wishlist'
+    const isProductInfo = cardStyle === 'ProductInfo'
 
     let saving = ''
 
     let allBadges:string[] = [...productBadge];
     const priceColor: string = isSales ? "text-red-text" : "text-primary"
-    const buttonColor: "default" | "white" | "red" = !isHome ? "default" : "white"
+    const buttonColor: "default" | "white" | "red" = !(isHome || isProductInfo) ? "default" : "white"
 
     const [isLiked, setIsLiked] = useState(false)
     const likeProduct = () =>{
@@ -62,29 +63,34 @@ export function ProductCard({title="product", ratingAvg=0, ratingQuantity=0, cur
 
     return (
         <>
-            <article className={` border-0 rounded-xl shadow-lg hover:shadow-xl relative ${isSales ? 'w-full max-w-[320px] h-auto' : 'w-89.5 h-122.5 lg:w-79.5' }
+            <article className={` border-0 rounded-xl shadow-lg hover:shadow-xl relative${isSales ? 'w-full max-w-[320px] h-auto' :
+                   isProductInfo ? "w-85.75 h-117.75 lg:w-110 lg:h-142" : 
+                   'w-89.5 h-122.5 lg:w-79.5'}
                 group relative`}>
                     
-                <div className="z-20 absolute right-3 top-3 invisible group-hover:visible">
-                    <SvgIconProduct color="bg-[#F3F4F6]" border="false" onClick={likeProduct} path={`${isLiked ?'src/assets/icons/heartFilled.svg' : 'src/assets/icons/heartIcon.svg' }`} alt="Ícone para salvar na wishlist" className={`${isHome ? 'hidden' : ''} `}/>
+                <div className="z-20 absolute left-68 top-3 invisible group-hover:visible">
+                    <SvgIconProduct color="bg-[#F3F4F6]" border="false" onClick={likeProduct} path={`${isLiked ?'src/assets/icons/heartFilled.svg' : 'src/assets/icons/heartIcon.svg' }`} alt="Ícone para salvar na wishlist" className={`${(isHome || isProductInfo) ? 'hidden' : ''} `}/>
                 </div>
+
                 {/**div das badges com loop */}
                 <div className={`${isSales ? 'flex justify-between w-full' : 'flex-col'}  p-3 z-1 absolute gap-2`}>
                     {allBadges.map( (badgeText) =>{
                         return(
-                            <div className={`relative flex items-center ${getBadgeColor(badgeText)} py-0.75 px-2.75 rounded-[100rem] h-5.5 `}>
+                            <div className={`relative flex items-center ${getBadgeColor(badgeText)} py-0.75 px-2.75 rounded-[100rem] h-5.5 ${isProductInfo ? "hidden" : "block"}`}>
                                 <span className=" font-semibold text-[0.75rem]">{badgeText}</span>
                             </div>
                         )
                     })}
                 </div>
 
-                <div className="h-89.5 rounded-t-xl overflow-hidden lg:h-79.5">
+                <div className={` rounded-t-xl overflow-hidden 
+                    ${isProductInfo ? "h-85.75 lg:h-110" : "h-89.5 lg:h-79.5"}`}>
                     <img className="w-full h-full hover:scale-105 object-cover" src={imgSrc} alt={imgAlt}></img>
                 </div>
-                <div className=" bg-secondary rounded-b-xl flex flex-col gap-2 p-4">
+                <div className={`bg-secondary rounded-b-xl flex flex-col gap-2 p-4 
+                    ${isProductInfo ? "h-32 lg:" : "h-33"}`}>
                     
-                    <div className={` ${!isHome ? 'flex justify-between' : 'hidden'}`}>
+                    <div className={` ${!(isHome || isProductInfo) ? 'flex justify-between' : 'hidden'}`}>
                         <span className="font-semibold text-[0.75rem] py-0.5 border-(--border-primary) border rounded-full px-2.75">{category}</span>
                         <div className="text-[0.875rem] flex items-center gap-1">
                             <img src="/src/assets/icons/starIcon.svg"></img>
@@ -93,26 +99,29 @@ export function ProductCard({title="product", ratingAvg=0, ratingQuantity=0, cur
                         </div>
                     </div>
 
-                    <h3 className="text-primary text-[1.125rem] font-semibold">{title}</h3>
+                    <h3 className={`text-primary font-semibold
+                        ${isProductInfo ? "text-[1rem]" : "text-[1.125rem]"}`}>{title}</h3>
                     {/*to escondendo essa div que mostra o rating caso n seja a home. pelo que eu vi so a tela de home e order
                     tem essa mesma disposicao do rating abaixo do nome, entao acho q da pra deixar assim. o estilo da tela de order,
                     inclusive, me parece o mesmo da de home*/}
-                    <div className={`text-[0.875rem] flex items-center gap-1 ${isHome ? '' : 'hidden'}`}>
+                    <div className={`text-[0.875rem] flex items-center gap-1 ${(isHome || isProductInfo) ? '' : 'hidden'}`}>
                         <img src="/src/assets/icons/starIcon.svg"></img>
-                        <span className="font-semibold">{ratingAvg}</span>
-                        <span className="font-normal text-tertiary ml-1">({ratingQuantity})</span>
+                        <span className={`${isProductInfo ? "font-normal" : "font-semibold"}`}>{ratingAvg}</span>
+                        <span className={`font-normal text-tertiary ml-1 
+                        ${isProductInfo ? "hidden" : "block"}`}>({ratingQuantity})</span>
                     </div>
-                    <div className= {`flex  ${!isHome ? 'flex-col gap-y-2' : 'justify-between '}`}>
+                    <div className= {`flex  ${!(isHome || isProductInfo) ? 'flex-col gap-y-2' : 'justify-between '}`}>
                         <div className="flex gap-2 items-center">
-                            <span className={`text-[1.25rem] font-bold ${priceColor}`}>${currentPrice}</span>
+                            <span className={`text-[1.25rem] font-bold ${isProductInfo ? "text-[1rem]" : "text-[1.125rem]"} ${priceColor}`}>${currentPrice}</span>
                             <span className={`text-[0.875rem] font-normal text-tertiary line-through ${oldPrice ? "inline-block" : "hidden"} `}>${oldPrice}</span>
                             <div className={`${!isSales ? 'hidden' : 'flex'} bg-[#EF4343]  items-center text-white py-0.75 px-2.75 rounded-[100rem] h-5.5 `}>
                                 <span className=" font-semibold text-[0.75rem] ">{saving}</span>
                             </div>
                         </div>
-                        <div className={`${!isHome ? 'w-full flex gap-2' : 'w-25'}`}> 
-                            <Button texto="Add to Cart" color={buttonColor} link="" buttonClassName="h-[length:36px]"  iconSrc={!isHome ? "src/assets/icons/cartIconWhite.svg" : undefined} iconPos="left"/>
-                            <SvgIconProduct onClick={likeProduct} path={`${isLiked ?'src/assets/icons/heartFilled.svg' : 'src/assets/icons/heartIcon.svg' }`} alt="Ícone para salvar na wishlist" border="true" className={`${isHome ? 'hidden' : ''}`}/>
+                        <div className={`${isProductInfo ? 'w-14' :
+                            !isHome ? 'w-full flex gap-2' : 'w-25'}`}> 
+                            <Button texto={`${isProductInfo ? "View" : "Add to Cart"}`} color={buttonColor} link="" buttonClassName="h-[length:36px]"  iconSrc={!(isHome || isProductInfo) ? "src/assets/icons/cartIconWhite.svg" : undefined} iconPos="left"/>
+                            <SvgIconProduct onClick={likeProduct} path={`${isLiked ?'src/assets/icons/heartFilled.svg' : 'src/assets/icons/heartIcon.svg' }`} alt="Ícone para salvar na wishlist" border="true" className={`${(isHome || isProductInfo) ? 'hidden' : ''}`}/>
                         </div>
                     </div>
                 </div>

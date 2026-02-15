@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Home } from './pages/Home'
+import { ProductInfo } from './pages/ProductInfo'
 import './App.css'
 import { Profile } from './pages/Profile'
 import { BrowserRouter } from 'react-router-dom'
@@ -12,9 +13,9 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
-        <Sales/>
-      </BrowserRouter>
+    <BrowserRouter>
+      <ProductInfo/>
+    </BrowserRouter>
     </>
   )
 }
