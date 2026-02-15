@@ -65,7 +65,7 @@ export function ProductCard({title="product", ratingAvg=0, ratingQuantity=0, cur
             <article className={` border-0 rounded-xl shadow-lg hover:shadow-xl relative ${isSales ? 'w-full max-w-[320px] h-auto' : 'w-89.5 h-122.5 lg:w-79.5' }
                 group relative`}>
                     
-                <div className="z-20 absolute left-68 top-3 invisible group-hover:visible">
+                <div className="z-20 absolute right-3 top-3 invisible group-hover:visible">
                     <SvgIconProduct color="bg-[#F3F4F6]" border="false" onClick={likeProduct} path={`${isLiked ?'src/assets/icons/heartFilled.svg' : 'src/assets/icons/heartIcon.svg' }`} alt="Ícone para salvar na wishlist" className={`${isHome ? 'hidden' : ''} `}/>
                 </div>
                 {/**div das badges com loop */}
