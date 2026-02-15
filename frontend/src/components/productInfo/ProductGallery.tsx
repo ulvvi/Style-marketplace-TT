@@ -26,7 +26,7 @@ export function ProductGallery({productPics = new Array(4).fill({imgSrc: "/src/a
                 </div>
                 <div className="flex flex-row gap-2 my-4 max-w-100 lg:max-w-full w-full">
                     {productPics.map((item, i) => (
-                        <button onClick={() => setCurrentImage(i)} className={`rounded-xl overflow-hidden ${ currentImage === i ? "ring-2 ring-primary" : ""}`}>
+                        <button onClick={() => setCurrentImage(i)} className={`rounded-xl overflow-hidden ${ currentImage === i ? "ring-2 ring-primary" : "cursor-pointer"}`}>
                             <img src={item.imgSrc} alt={item.alt} className="w-full h-full object-cover"></img>
                         </button>
                     ))}
