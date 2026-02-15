@@ -1,10 +1,16 @@
 import { useState } from 'react'
-import { BrowserRouter } from "react-router"
 import { Home } from './pages/Home'
 import { ProductInfo } from './pages/ProductInfo'
 import './App.css'
+import { Profile } from './pages/Profile'
+import { BrowserRouter } from 'react-router-dom'
+import { EntranceBoxExtended } from './components/EntranceBoxExtended'
+import { SignUp } from './pages/signUp'
+import { Sales } from './pages/Sales'
+
 
 function App() {
+
   return (
     <>
     <BrowserRouter>

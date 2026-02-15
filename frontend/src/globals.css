@@ -8,6 +8,11 @@
     --color-placeholder: #EAEAEA;
     --border-primary: #E5E7EB;
 
+    /*Sales*/
+    --color-red-grad: #EF4444;
+    --color-pink-grad: #DB2777;
+    --color-red-text: #DC2626;
+
 }
 
 @layer base {
@@ -21,14 +26,6 @@
     body {
           width: 100%;
     }
-    html,
-    body {
-          width: 100%;
-    }
-
-    #root {
-        height: 100%;
-    }
 
     header {
         width: 100%;
@@ -37,4 +34,5 @@
 }
 
 @layer components {
+
 }
