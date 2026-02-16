@@ -1,5 +1,5 @@
 import z from "zod"
-type genderType = "MALE" | "FEMALE" | "OTHER"
+import { Gender } from "../generated/prisma/enums";
 
 const signUpVal = z.object({
     firstName: z.string(),
@@ -14,10 +14,14 @@ const signInVal= signUpVal.pick({
     password:true
 })
 
+const getUserId = z.object({
+    id: z.coerce.number()
+})
+
 const updateUserVal= signUpVal.partial().extend({
-    gender: z.enum(["MALE, FEMALE, OTHER"]),
+    gender: z.enum(Gender),
     phoneNumber: z.string().min(10, {message: "Telefone deve ter DDD + número"}).max(11, {message: "Telefone não pode ter mais de 11 dígitos"}),
-    dateBirth: z.date(),
+    dateBirth: z.coerce.date(),
     emailNotification: z.boolean(),
     smsNotification: z.boolean(),
     orderUpdate: z.boolean(),
@@ -28,5 +32,6 @@ const updateUserVal= signUpVal.partial().extend({
 export default{
     signUpVal,
     signInVal,
-    updateUserVal
+    updateUserVal,
+    getUserId
 }
