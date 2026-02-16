@@ -1,10 +1,5 @@
 import z from "zod";
 
-const user = z.object({
-    firstName: z.string(),
-    lastName: z.string(),
-    email: z.email("Somente email é permitido.")
-});
 
 const variant = z.object({
     name: z.string(),
@@ -13,9 +8,6 @@ const variant = z.object({
     .max(5, "Nota máxima é 5.")
 });
 
-const createUserValidation = user;
-
-const updateUserValidation = user.partial();
 
 const createProductValidation = variant;
 
@@ -24,7 +16,6 @@ const createReviewValidation = variant.pick({
 })
 
 
-export default {createUserValidation, 
-    updateUserValidation, 
+export default { 
     createProductValidation, 
     createReviewValidation};

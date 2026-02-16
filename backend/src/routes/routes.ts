@@ -5,8 +5,10 @@ import { reviewController } from "../controllers/reviewController";
 import { UserController } from "../controllers/UserController";
 import { Wishlist } from "../controllers/WishlistController";
 import { authenticateJWT, ensureOwner } from "../middlewares/authMiddleware";
-import { validateRequest } from "../middlewares/ValidateSchemaBody";
 import userValidation from "../middlewares/userValidation";
+import { validateRequestBody } from "../middlewares/ValidateSchemaBody";
+import { validateRequestParams } from "../middlewares/ValidadeSchemaParams";
+import wishlistValidation from "../middlewares/wishlistValidation";
 
 const router = Router();
 
@@ -32,33 +34,46 @@ router.put("/review/:id", reviewController.updateReview);
 router.delete("/review/:id", reviewController.deleteReview);
 
 //usuario
-router.post("/signUp", validateRequest(userValidation.signUpVal),UserController.signUp);
-router.post("/signIn", UserController.signIn);
+router.post("/signUp", 
+    validateRequestBody(userValidation.signUpVal),
+    UserController.signUp);
+router.post("/signIn", 
+    validateRequestBody(userValidation.signInVal), 
+    UserController.signIn);
 router.get("/user/:id",
+    validateRequestParams(userValidation.getUserId),
     authenticateJWT, 
     ensureOwner, 
     UserController.readUser);
 router.get("/users", 
     UserController.readAllUsers); //rota mais pra debbug
 router.put("/user/:id", 
+    validateRequestParams(userValidation.getUserId),
+    validateRequestBody(userValidation.updateUserVal),
     authenticateJWT, 
     ensureOwner, 
     UserController.updateUser);
 router.delete("/user/:id",
+    validateRequestParams(userValidation.getUserId),
     authenticateJWT, 
     ensureOwner, 
     UserController.deleteUser);
 
 //wishlist
 router.get("/user/:id/wishlist",
+    validateRequestParams(userValidation.getUserId),
     authenticateJWT, 
     ensureOwner, 
     Wishlist.readWishlist);
 router.put("/user/:id/wishlist/add",
+    validateRequestParams(userValidation.getUserId),
+    validateRequestBody(wishlistValidation.addWishlistVal),
     authenticateJWT, 
     ensureOwner, 
     Wishlist.addToWishlist);
-    router.put("/user/:id/wishlist/del",
+router.put("/user/:id/wishlist/del",
+    validateRequestParams(userValidation.getUserId),
+    validateRequestBody(wishlistValidation.delWishlistVal),
     authenticateJWT, 
     ensureOwner, 
     Wishlist.DelFromWishlist);
