@@ -88,7 +88,7 @@ export function ProductCard({title="product", ratingAvg=0, ratingQuantity=0, cur
                     <img className="w-full h-full hover:scale-105 object-cover" src={imgSrc} alt={imgAlt}></img>
                 </div>
                 <div className={`bg-secondary rounded-b-xl flex flex-col gap-2 p-4 
-                    ${isProductInfo ? "h-32 lg:" : "h-33"}`}>
+                    ${isProductInfo ? "h-32 lg:" : "h-auto"}`}>
                     
                     <div className={` ${!(isHome || isProductInfo) ? 'flex justify-between' : 'hidden'}`}>
                         <span className="font-semibold text-[0.75rem] py-0.5 border-(--border-primary) border rounded-full px-2.75">{category}</span>
