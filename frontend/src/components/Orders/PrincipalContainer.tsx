@@ -10,7 +10,7 @@ export function PrincipalContainer(){
             <div className="flex max-w-[1400px] flex-col items-center justify-start gap-[32px] mt-[32px] mb-[32px] ">
             <PersonCardName name={"Jhon Doe"} email={"john.doe@example.com"} orders={2} memberSince={2023}/>
             </div>
-            <div className="flex flex-col items-center gap-[8px]~w-full">
+            <div className="flex flex-col items-center gap-[8px] w-full">
                 <ProfileContainer/>
                 <div className="flex flex-col items-center gap-[24px] w-full">
                     <ContentBox title="Order History" titleClassName="!font-bold" 
@@ -19,7 +19,7 @@ export function PrincipalContainer(){
                     buttonIconPos="left" buttonClassName="!w-[155px]">
                     
                     </ContentBox>
-                    <Order/> 
+                    <Order/>
                 </div>
                 
             </div>
