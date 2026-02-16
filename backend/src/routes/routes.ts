@@ -7,10 +7,11 @@ import { Wishlist } from "../controllers/WishlistController";
 import { authenticateJWT, ensureOwner } from "../middlewares/authMiddleware";
 import userValidation from "../middlewares/userValidation";
 import { validateRequestBody } from "../middlewares/ValidateSchemaBody";
-import ValidadeSchemaParams, { validateRequestParams } from "../middlewares/ValidadeSchemaParams";
+import ValidateSchemaParams, { validateRequestParams } from "../middlewares/ValidateSchemaParams";
 import wishlistValidation from "../middlewares/wishlistValidation";
 import productValidation from "../middlewares/productValidation";
 import variantValidation from "../middlewares/variantValidation";
+import reviewValidation from "../middlewares/reviewValidation";
 
 const router = Router();
 
@@ -20,14 +21,14 @@ router.post("/product",
     productController.createProduct);
 router.get("/products", productController.readAllProduct);
 router.get("/product/:id",
-    validateRequestParams(ValidadeSchemaParams.getSelfId),
+    validateRequestParams(ValidateSchemaParams.getSelfId),
     productController.readProduct);
 router.put("/product/:id", 
-    validateRequestParams(ValidadeSchemaParams.getSelfId),
+    validateRequestParams(ValidateSchemaParams.getSelfId),
     validateRequestBody(productValidation.updateProductVal),
     productController.updateProduct);
 router.delete("/product/:id", 
-    validateRequestParams(ValidadeSchemaParams.getSelfId),
+    validateRequestParams(ValidateSchemaParams.getSelfId),
     productController.deleteProduct);
 
 // Rota da variante
@@ -39,22 +40,34 @@ router.get("/variants/:productId",
    validateRequestParams(variantValidation.getProductId),
     variantController.readAllVariant); // Retorna todas as variantes de um produto
 router.get("/variant/:id", 
-    validateRequestParams(ValidadeSchemaParams.getSelfId),
+    validateRequestParams(ValidateSchemaParams.getSelfId),
     variantController.readVariant);
 router.put("/variant/:id", 
-    validateRequestParams(ValidadeSchemaParams.getSelfId),
+    validateRequestParams(ValidateSchemaParams.getSelfId),
     validateRequestBody(variantValidation.updateVariantVal),
     variantController.updateVariant);
 router.delete("/variant/:id", 
-    validateRequestParams(ValidadeSchemaParams.getSelfId),
+    validateRequestParams(ValidateSchemaParams.getSelfId),
     variantController.deleteVariant);
 
 // Rota da review
-router.post("/review/:productId", reviewController.createReview);
-router.get("/reviews/:productId", reviewController.readAllReview); // Retorna todos os reviews de um produto
-router.get("/review/:id", reviewController.readReview);
-router.put("/review/:id", reviewController.updateReview);
-router.delete("/review/:id", reviewController.deleteReview);
+router.post("/review/:productId",
+    validateRequestParams(reviewValidation.getProductId),
+    validateRequestBody(reviewValidation.createReviewVal),
+    reviewController.createReview);
+router.get("/reviews/:productId", 
+    validateRequestParams(reviewValidation.getProductId),
+    reviewController.readAllReview); // Retorna todos os reviews de um produto
+router.get("/review/:id", 
+    validateRequestParams(ValidateSchemaParams.getSelfId),
+    reviewController.readReview);
+router.put("/review/:id", 
+    validateRequestParams(ValidateSchemaParams.getSelfId),
+    validateRequestBody(reviewValidation.updateReviewVal),
+    reviewController.updateReview);
+router.delete("/review/:id", 
+    validateRequestParams(ValidateSchemaParams.getSelfId),
+    reviewController.deleteReview);
 
 //usuario
 router.post("/signUp", 
@@ -64,20 +77,20 @@ router.post("/signIn",
     validateRequestBody(userValidation.signInVal), 
     UserController.signIn);
 router.get("/user/:id",
-    validateRequestParams(ValidadeSchemaParams.getSelfId),
+    validateRequestParams(ValidateSchemaParams.getSelfId),
     authenticateJWT, 
     ensureOwner, 
     UserController.readUser);
 router.get("/users", 
     UserController.readAllUsers); //rota mais pra debbug
 router.put("/user/:id", 
-    validateRequestParams(ValidadeSchemaParams.getSelfId),
+    validateRequestParams(ValidateSchemaParams.getSelfId),
     validateRequestBody(userValidation.updateUserVal),
     authenticateJWT, 
     ensureOwner, 
     UserController.updateUser);
 router.delete("/user/:id",
-    validateRequestParams(ValidadeSchemaParams.getSelfId),
+    validateRequestParams(ValidateSchemaParams.getSelfId),
     authenticateJWT, 
     ensureOwner, 
     UserController.deleteUser);
