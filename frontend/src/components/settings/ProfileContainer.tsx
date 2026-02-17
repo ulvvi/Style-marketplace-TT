@@ -33,7 +33,17 @@ export function ProfileContainer (  ){
                         <h2 className="text-[16px]/5 font-semibold">Change Password</h2>
                         <span className="text-[14px]/5 text-tertiary">Update your account Password</span>
                     </div>
-                    <Button texto="Update Password" buttonClassName="!h-40px !w-[144px]" color="white"/>
+                    <Button texto="Update Password" buttonClassName="!h-40px !w-[144px]" color="white" link=""/>
+                </div>
+                
+                <div className="w-full h-[1px] bg-[#E5E7EB]"></div>
+
+                <div className="flex justify-between w-full">
+                    <div className="flex flex-col min-w-[164px] items-start">
+                        <h2 className="text-[16px]/5 font-semibold text-[#DC2626]">Delete Account</h2>
+                        <span className="text-[14px]/5 text-tertiary">Permanently delete your account and data</span>
+                    </div>
+                    <Button texto="Update Password" buttonClassName="!h-40px !w-[144px]" color="red" link=""/>
                 </div>
 
                 </ContentBox>
