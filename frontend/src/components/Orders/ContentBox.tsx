@@ -27,7 +27,7 @@ export function ContentBox({ children,title,titleClassName,titleIconAlt,titleIco
     >
         <div className="flex justify-between items-center w-full ">
           <div className='flex items-center justify-center gap-[6px] '>
-            <img src={titleIconSrc} alt={titleIconAlt} className={` ${titleIconSrc ? "inline-block" : "hidden"}`}/>
+            <img src={titleIconSrc} alt={titleIconAlt} className={` ${titleIconSrc ? "" : "hidden"}`}/>
             <h1 className={`font-semibold text-[24px] ${titleClassName || ''}`} >
                 {title}
             </h1>    
