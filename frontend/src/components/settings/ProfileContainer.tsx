@@ -18,7 +18,7 @@ export function ProfileContainer (  ){
                      texto3="Settings" src3="src/assets/icons/SettingsIcon.svg" alt3="Settings"/>
             <div className="flex flex-col gap-[24px]">
                 <ContentBox title="Notification Preferences" titleIconSrc="src/assets/icons/notificationIcon.svg">
-                
+                        <SwitchButton/>
                 </ContentBox>
             </div>
         </div>
