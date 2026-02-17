@@ -1,4 +1,4 @@
-import { Header } from "../components/Header";
+
 
 import { SalesHero } from "../components/Sales/SalesHero";
 
@@ -11,7 +11,6 @@ export function Sales(){
     return(
         <>
             <div className="flex flex-col w-full m-0">
-                <Header/>
                 <SalesHero/>
                 <SalesStats maxDiscount={70} totalItens={500} timeLeft={48} shippingDiscount={100}/>
                 <section className="w-full p-6 lg:flex lg:justify-center gap-8">

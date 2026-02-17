@@ -1,4 +1,4 @@
-import { Header } from "../components/Header";
+
 import { Footer } from "../components/home/Footer";
 import { Hero } from "../components/home/Hero";
 import { InfoBar } from "../components/home/InfoBar";
@@ -9,7 +9,6 @@ export function Home() {
     return (
         <>
             <div className="flex flex-col w-full m-0">
-                <Header />
                 <Hero />
                 <InfoBar />
                 <CategorySection />
