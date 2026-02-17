@@ -82,7 +82,6 @@ model CartVariant {
   variantId Int
   variant   Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
 
-  // ADICIONE ESTE CAMPO:
   quantity  Int     @default(1)
 
   @@id([cartId, variantId])
