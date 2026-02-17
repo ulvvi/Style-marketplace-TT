@@ -1,124 +1,143 @@
 import { Request, Response } from "express";
 import { prisma } from "../config/prisma";
 
-export class cartController {   
+export class CartController {
+  public static async addVariantToCart(req: Request, res: Response) {
+    const { userId } = req.params;
+    const { variantId } = req.body;
 
-    public static async addVariantToCart (req: Request, res: Response) {
-        const { userId } = req.params;
-        const { variantId } = req.body;
-        try {
+    try {
+      const uId = Number(userId);
 
-            const variant = await prisma.variant.findUnique({ where: { id: variantId }, include: { product: true } });
-            
-            if (!variant) {
-                return res.status(404).json({ error: "Variante não encontrada." });
+      // 1. Busca variante e carrinho em paralelo
+      //(isso ajuda a salvar tempo, descobri e é importante especialmente pro cart)
+      const [variant, cart] = await Promise.all([
+        prisma.variant.findUnique({ 
+            where: { id: variantId }, 
+            include: { product: true } 
+        }),
+        prisma.cart.findUnique({ 
+            where: { userId: uId },
+            include: { cartVariants: true }
+        })
+      ]);
+
+      if (!variant) return res.status(404).json({ error: "variante nao encontrada" });
+      if (!cart) return res.status(404).json({ error: "usuario nao possui carrinho" });
+
+      const price = variant.product.price;
+
+      const updatedCart = await prisma.$transaction(async (tx) => {
+        const existingItem = cart.cartVariants.find(cv => cv.variantId === variantId);
+
+        if (existingItem) {
+          // se ja tem o item, so aumenta a quantidade
+          await tx.cartVariant.update({
+            where: { 
+                cartId_variantId: { cartId: cart.id, variantId: variantId } 
+            },
+            data: { quantity: { increment: 1 } }
+          });
+        } else {
+          await tx.cartVariant.create({
+            data: {
+              cartId: cart.id,
+              variantId: variantId,
+              quantity: 1
             }
-            
-            const updatedCart = await prisma.$transaction(async (tx:any) => {
-
-                //se a variant ja estiver, simplesmente atualiza a quantidade, caso nao esteja, ele adiciona a variant
-                if(updatedCart.cartVariants.some((cv:any) => cv.variantId === variantId)) {
-                    return tx.cart.update({
-                        where: { userId: userId },
-                        data: {
-                            quantity: { increment: 1 }
-                        },
-                        include: { cartVariants: { include:  { variant: true } }}
-                    });
-                }
-
-                await tx.cartVariant.create({
-                    data: {
-                        cart: { connect: { userId: userId } },
-                        variant: { connect: { id: variantId } },
-                    }
-                });
-                
-                return tx.cart.update({
-                    where: { userId: userId },
-                    data: {
-                        subtotal: { increment: variant.product.price },
-                        totalCost: { increment: variant.product.price }
-                    },
-                    include: { cartVariants: { include:  { variant: true } }}
-                });
-            });
-            res.status(200).json(updatedCart);
-            
-        } catch (error) {
-            res.status(500).json({ error: "Internal server error.", message: error });
+          });
         }
+
+        return tx.cart.update({
+          where: { id: cart.id },
+          data: {
+            subtotal: { increment: price },
+            totalCost: { increment: price }
+          },
+          include: { 
+            cartVariants: { 
+                include: { variant: { include: { product: true } } } 
+            } 
+          }
+        });
+      });
+
+      return res.status(200).json(updatedCart);
+    } catch (error) {
+      return res.status(500).json({ error: "erro ao adicionar ao carrinho", details: error });
     }
+  }
 
+  public static async removeVariant(req: Request, res: Response) {
+    const { userID } = req.params;
+    const { variantId } = req.body;
 
-    public static async removeVariant (req: Request, res: Response) {
-        
-        const { userId } = req.params;
-        const { variantId } = req.body;
+    try {
+      const userId = Number(userID);
 
-        try {
-            
-            const variant = await prisma.variant.findUnique({ where: { id: variantId }, include: { product: true } });
+      const cartItem = await prisma.cartVariant.findFirst({
+        where: { 
+          cart: { userId: userId },
+          variantId: variantId 
+        },
+        include: { 
+            variant: { include: { product: true } } 
+        }
+      });
 
-            if (!variant) {    
-                return res.status(404).json({ error: "Variante não encontrada." });
+      if (!cartItem) {
+        return res.status(404).json({ error: "Variante não está no seu carrinho." });
+      }
+
+      //preço a remover
+      const totalToRemove = cartItem.variant.product.price * cartItem.quantity;
+
+      const updatedCart = await prisma.$transaction(async (tx) => {
+        await tx.cartVariant.delete({
+          where: { 
+              cartId_variantId: { cartId: cartItem.cartId, variantId: variantId } 
+          }
+        });
+
+        return tx.cart.update({
+          where: { userId: userId },
+          data: {
+            subtotal: { decrement: totalToRemove },
+            totalCost: { decrement: totalToRemove }
+          },
+          include: { 
+            cartVariants: { 
+                include: { variant: { include: { product: true } } } 
+            } 
+          }
+        });
+      });
+
+      return res.status(200).json(updatedCart);
+    } catch (error) {
+      return res.status(500).json({ error: "Erro ao remover item.", details: error });
+    }
+  }
+
+  public static async getCart(req: Request, res: Response) {
+    try {
+      const { userId } = req.params;
+      const cart = await prisma.cart.findUnique({
+        where: { userId: Number(userId) },
+        include: {
+          cartVariants: {
+            include: {
+              variant: { include: { product: true } }
             }
-
-            const updatedCart = await prisma.$transaction(async (tx:any) => {
-
-                const removedVariantToCart = await tx.cartVariant.deleteMany({
-                    where: {
-                        cart: { userId: userId },
-                        variant: { variantId: variantId }
-                    }
-                });
-
-                if (removedVariantToCart.count === 0) {
-                    throw new Error("Variante não encontrada no carrinho.");
-                }
-                
-                return tx.cart.update({
-                    where: { userId: userId },
-                    data: {
-                        subtotal: { decrement: variant.product.price },
-                        totalCost: { decrement: variant.product.price }
-                    },
-                    include: { cartVariants: { include:  { variant: true } }}
-                });
-            });
-            res.status(200).json(updatedCart);
-            
-        } catch (error) {
-            res.status(500).json({ error: "Internal server error.", message: error });
+          }
         }
+      });
+
+      if (!cart) return res.status(404).json({ error: "Carrinho vazio ou não encontrado." });
+
+      return res.status(200).json(cart);
+    } catch (error) {
+      return res.status(500).json({ error: "Erro ao buscar carrinho." });
     }
-
-    public static async getCart (req: Request, res: Response) {
-
-        try {
-
-            const { userId } = req.params;
-
-            const cart = await prisma.cart.findUnique({
-                where: { userId: Number(userId) },
-                include: {
-                    cartVariants: {
-                        include: {
-                            variant: true
-                        }
-                    }
-                }
-            });
-            res.status(200).json(cart);
-            
-        } catch (error) {
-            res.status(500).json({ error: "Internal server error.", message: error });
-        }
-    }
-
-    
-    
-        
-
-
+  }
 }
