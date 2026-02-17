@@ -9,7 +9,7 @@ export class CartController {
     try {
       const uId = Number(userId);
 
-      // 1. Busca variante e carrinho em paralelo
+      //Busca variante e carrinho em paralelo
       //(isso ajuda a salvar tempo, descobri e é importante especialmente pro cart)
       const [variant, cart] = await Promise.all([
         prisma.variant.findUnique({ 
