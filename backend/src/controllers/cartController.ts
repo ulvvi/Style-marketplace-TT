@@ -3,11 +3,11 @@ import { prisma } from "../config/prisma";
 
 export class CartController {
   public static async addVariantToCart(req: Request, res: Response) {
-    const { userId } = req.params;
+    const { userID } = req.params;
     const { variantId } = req.body;
 
     try {
-      const uId = Number(userId);
+      const userId = Number(userID);
 
       //Busca variante e carrinho em paralelo
       //(isso ajuda a salvar tempo, descobri e é importante especialmente pro cart)
@@ -17,7 +17,7 @@ export class CartController {
             include: { product: true } 
         }),
         prisma.cart.findUnique({ 
-            where: { userId: uId },
+            where: { userId: userId },
             include: { cartVariants: true }
         })
       ]);
