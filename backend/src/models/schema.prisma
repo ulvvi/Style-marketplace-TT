@@ -144,6 +144,7 @@ model Product {
   name String // Esquecemos de colocar o nome
   rating Float 
   price Float
+  SalePrice Float?
   numOfReviews Int
   isOutOfStock Boolean
 
@@ -151,6 +152,16 @@ model Product {
   review Review[]
   wishlistProducts WishlistProduct[]
   categories ProductCategory[]
+  sales sale[]
+}
+
+model sale {
+  id Int @id @default(autoincrement())
+  discountPercentage Float
+  startDate DateTime
+  endDate DateTime
+
+  products Product[]
 }
 
 model Variant {
