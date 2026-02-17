@@ -5,6 +5,9 @@ import { reviewController } from "../controllers/reviewController";
 import { UserController } from "../controllers/UserController";
 import { Wishlist } from "../controllers/WishlistController";
 import { authenticateJWT, ensureOwner } from "../middlewares/authMiddleware";
+import { cartController } from "../controllers/cartController";
+import { orderController } from "../controllers/orderController";
+
 import userValidation from "../middlewares/userValidation";
 import { validateRequestBody } from "../middlewares/ValidateSchemaBody";
 import ValidateSchemaParams, { validateRequestParams } from "../middlewares/ValidateSchemaParams";
@@ -68,6 +71,14 @@ router.put("/review/:id",
 router.delete("/review/:id", 
     validateRequestParams(ValidateSchemaParams.getSelfId),
     reviewController.deleteReview);
+
+// Cart router
+router.post("/cart/:cartId", cartController.addVariantToCart);
+router.delete("/cart/:cartId", cartController.removeVariant);
+router.get("/cart/:cartId", cartController.getCart);
+
+// Order router
+router.post("/order/:userId", orderController.createOrder);
 
 //usuario
 router.post("/signUp", 
