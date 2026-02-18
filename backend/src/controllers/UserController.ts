@@ -50,7 +50,7 @@ export class UserController{
                 
             }
             const token = auth.generateJWT(user.id);
-            return res.status(200).json({token: token});
+            return res.status(200).json({token: token, userId: user.id});
         }catch(error:any){
             res.status(500).json({message: error.message})
         }
