@@ -13,16 +13,19 @@ export function ProfileContainer (){
     //isso é pra att o setformData após encontrar o usuário pela get user
     useEffect(() =>{
         setFormData(user)
+        console.log(user)
     }, [user])
 
     //disparado no onchange, isso aqui ja é pra att o data que vai ser enviado pelo handlesubmit
     function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>){
         const {name, value} = e.target;
+        const finalValue = (value === '' ? null : value) //tratamento pra strings vazias
         setFormData( (prevData)=>{
             if(!prevData) return prevData
+            console.log(prevData)
             return{
                 ...prevData,
-                [name]: value,
+                [name]: finalValue,
             }
         });
     } 
@@ -49,7 +52,7 @@ export function ProfileContainer (){
             const result = await response.json()
             console.log(result)
             //da reload na pagina so pra dar um feedback visual
-            window.location.reload()
+    
         }
         catch(error:any){
             console.error(error.message)
