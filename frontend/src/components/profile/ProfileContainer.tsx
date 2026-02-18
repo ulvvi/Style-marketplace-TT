@@ -52,6 +52,7 @@ export function ProfileContainer (){
             const result = await response.json()
             console.log(result)
             //da reload na pagina so pra dar um feedback visual
+            window.location.reload()
     
         }
         catch(error:any){
