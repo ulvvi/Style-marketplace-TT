@@ -2,6 +2,10 @@ import { ButtonIntegration } from "./ButtonIntegration"
 import { InputText } from "./InputText"
 import { Link } from "react-router"
 import { Button } from "./Button"
+import { useAuth } from '../contexts/AuthContext'
+import { useGoogleLogin } from "@react-oauth/google"
+import FacebookLogin from '@greatsumini/react-facebook-login';
+import axios from 'axios'
 
 export function EntranceBoxExtended() {
     return (
