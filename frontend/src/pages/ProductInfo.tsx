@@ -1,4 +1,4 @@
-import { Header } from "../components/Header";
+
 import { Breadcrumbs } from "../components/productInfo/Breadcrumbs";
 import { ProductGallery } from "../components/productInfo/ProductGallery";
 import { ProductInfoTabs } from "../components/productInfo/ProductInfoTabs";
@@ -12,7 +12,7 @@ export function ProductInfo() {
     ]
     return (
         <>
-            <Header />
+
             <main className="flex justify-center">
                 <div className="grid grid-cols-2 gap-x-12 mg-0 px-4 py-8 lg:max-w-350">
                     <Breadcrumbs items={productPaths} />
