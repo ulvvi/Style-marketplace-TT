@@ -59,10 +59,10 @@ export class UserController{
 
     public static async readUser(req: Request, res: Response){
         try {
-            const {id} = req.params;
+            const {userId} = req.params;
             const user = await prisma.user.findUnique({
                 where:{
-                    id: parseInt(id as string) //garantir q o id seja int, ja q nos params ele é string
+                    id: parseInt(userId as string) //garantir q o id seja int, ja q nos params ele é string
                 },
                 include:{
                     wishlist:true,
@@ -102,7 +102,7 @@ export class UserController{
                 totalOrders, totalRating, totalWishlist, emailNotification, 
                 smsNotification, marketingEmail, orderUpdate, newArrival, 
                 saleAlert} = req.body;
-            const {id} = req.params;
+            const {userId} = req.params;
             const updateData: Prisma.UserUpdateInput = {
                 firstName: firstName,
                 lastName: lastName,
@@ -122,7 +122,7 @@ export class UserController{
             }
             const updatedUser = await prisma.user.update({
                 where:{
-                    id: parseInt(id as string)
+                    id: parseInt(userId as string)
                 },
                 data: updateData
             })
@@ -134,10 +134,10 @@ export class UserController{
     //no figma tambem nao vi algo que indicasse excluir conta, mas vou deixar pelo mesmo motivo do readalluser
     public static async deleteUser(req: Request, res: Response){
         try {
-            const {id} = req.params;
+            const {userId} = req.params;
             const deletedUser = await prisma.user.delete({
                 where:{
-                    id: parseInt(id as string)
+                    id: parseInt(userId as string)
                 }
             })
             res.status(200).json(deletedUser)

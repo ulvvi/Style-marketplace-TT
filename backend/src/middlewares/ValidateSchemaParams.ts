@@ -5,6 +5,10 @@ const getSelfId = z.object({
     id: z.coerce.number().int()
 })
 
+const getUserId = z.object({
+    userId: z.coerce.number().int()
+})
+
 export function validateRequestParams<T>(schema:z.ZodSchema<T>){
     return(req: Request, res: Response, next: NextFunction)=>{
         const validateParams = schema.safeParse(req.params)
@@ -17,6 +21,7 @@ export function validateRequestParams<T>(schema:z.ZodSchema<T>){
 }
 
 export default{
-    getSelfId
+    getSelfId,
+    getUserId
 }
 
