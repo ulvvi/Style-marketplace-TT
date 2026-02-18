@@ -2,8 +2,49 @@ import { ButtonIntegration } from "./ButtonIntegration"
 import { InputText } from "./InputText"
 import { Link } from "react-router"
 import { Button } from "./Button"
+import { useGoogleLogin } from "@react-oauth/google"
+import { useState } from "react"
+import axios from 'axios'
+
+interface UserData{
+    name: string
+    email: string
+    picture: string
+}
 
 export function EntranceBox() {
+
+    const [profileImage,setProfileImage] = useState()
+    const [user,setUser] = useState<UserData | null>(null);
+
+    const loginWithGoogle = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            console.log("Logado!",tokenResponse)
+        
+        try{
+            const dados = await axios.get(
+                'https://www.googleapis.com/oauth2/v3/userinfo',
+                {
+                    headers:{
+                        Authorization: `Bearer ${tokenResponse.access_token}`,
+                    },
+                }
+            );
+            console.log("dados:", dados.data);
+            setUser(dados.data);
+            setProfileImage(dados.data.picture)
+            console.log("url",dados.data.picture)
+
+        } catch (error) {
+            console.error("erro ao buscar os dados do usuario", error);
+        }
+
+        },
+        onError: (tokenResponse) => {
+            console.log("Não logado",tokenResponse)
+        }
+        
+    })
     return (
         <>
             <div className=" max-w-[448px] h-[748px] md:h-[704px] flex flex-col items-center gap-[32px]">
@@ -48,8 +89,8 @@ export function EntranceBox() {
                     </div>
                     <div className="flex flex-col items-center justify-center gap-[24px] w-full pb-[24px] pl-[24px] pr-[24px]">
                         <div className="w-full  gap-[12px] flex flex-col items-center justify-center">
-                            <ButtonIntegration icone="src/assets/icons/googleLogo.svg" texto="Continue with Google" link="/google" />
-                            <ButtonIntegration icone="src/assets/icons/facebookLogo.svg" texto="Continue with Facebook" link="/facebook" />
+                            <ButtonIntegration icone="src/assets/icons/googleLogo.svg" texto="Continue with Google" onClick={() => loginWithGoogle()} />
+                            <ButtonIntegration icone="src/assets/icons/facebookLogo.svg" texto="Continue with Facebook" />
 
                         </div>
 
