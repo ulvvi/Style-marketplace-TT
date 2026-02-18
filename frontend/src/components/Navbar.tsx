@@ -10,9 +10,11 @@ export function Navbar() {
     const iconSearchBar: ReactNode = <img src="/src/assets/icons/searchIcon.svg" className="filter-[invert(46%)_sepia(8%)_saturate(595%)_hue-rotate(182deg)_brightness(93%)_contrast(89%)]"/>
     const { user, isLogged, login } = useContext(UserContext)
     const { cart } = useContext(CartContext)
+    
+    //variaveis de teste enquanto a tela de login não está integrada
     const email = "josesoares@gmail.com"
     const password = "teste"
-    
+
     const formatUserName = (firstName:string | null, lastName:string | null) => {
         
         if(firstName && lastName){
@@ -70,7 +72,7 @@ export function Navbar() {
                             <IconButton iconSrc="/src/assets/icons/heartIcon.svg" onClick={()=>login(email, password)}></IconButton>
                         </li>
                         <li className="ml-2">
-                            <IconButton buttonType="profile" isLogged={isLogged} profileInitials={isLogged ? formatUserName(user!.firstName.toString(), user!.lastName.toString()) : ""} profilePicture={isLogged ? user?.picutre : undefined} iconSrc="/src/assets/icons/userIcon.svg"></IconButton>
+                            <IconButton buttonType="profile" isLogged={isLogged} profileInitials={isLogged ? formatUserName(user!.firstName.toString(), user!.lastName.toString()) : ""} iconSrc="/src/assets/icons/userIcon.svg"></IconButton>
                         </li>
                         <li className="ml-2">
                             <IconButton buttonType="cart" cartItems={cart?.cartQuantity ?? 0} iconSrc="/src/assets/icons/cartIcon.svg"></IconButton>

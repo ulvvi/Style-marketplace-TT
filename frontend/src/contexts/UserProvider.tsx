@@ -4,7 +4,6 @@ interface User {
     id: number;
     firstName: string,
     lastName: string,
-    picutre?: string,
     email: string,
     gender?: "FEMALE" | "MALE" | "OTHER",
     phoneNumber?: string,

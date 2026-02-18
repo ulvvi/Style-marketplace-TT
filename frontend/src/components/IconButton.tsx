@@ -6,18 +6,16 @@ interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
     cartItems?: number;
     isLogged?: boolean;
     profileInitials?: string;
-    profilePicture?: string | undefined
     buttonClassName?: string;
 }
 
-export function IconButton({iconSrc, iconSize = "w-4 h-4", alt, buttonType = "default", cartItems = 0, isLogged, profileInitials, profilePicture = undefined, buttonClassName, ...props}: IconButtonProps) {
+export function IconButton({iconSrc, iconSize = "w-4 h-4", alt, buttonType = "default", cartItems = 0, isLogged, profileInitials, buttonClassName, ...props}: IconButtonProps) {
     
     return (
         <>
             <button className={`${buttonType === "profile" && isLogged ? "p-0" : "p-3 hover:bg-[#F3F4F6]"} h-10 w-10 rounded-[10px] relative cursor-pointer ${buttonClassName}`} {...props}>
                 <img src={iconSrc} alt={alt} className={`${buttonType === "profile" && isLogged ? "hidden" : "block"}`}/>
                 <div className={`${buttonType === "profile" && isLogged ? "block" : "hidden"} h-10 w-10 flex items-center justify-center rounded-full relative bg-[#F3F4F6] overflow-hidden`}>
-                    <img src={profilePicture} className={`${isLogged && profilePicture !== undefined ? "inline-block" : "hidden"} absolute w-10 h-10 object-cover`}/>
                     <span className="text-[0.875rem] font-semibold">{profileInitials}</span>
                 </div>
                 <div className={`${buttonType === "cart" && cartItems > 0 ? "block" : "hidden"} w-5 h-5 absolute flex items-center justify-center -top-2 -right-2 rounded-full bg-primary`}>
