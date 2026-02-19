@@ -19,21 +19,36 @@ export function ProductInfo() {
         { label: "Premium Cotton T-Shirt", path: "/" }
     ]
 
+    if(loading){
+        return (
+            <></>
+        )
+    }
 
+    if(!product){
+        return (
+            <>
+                <div className="flex flex-col items-center mt-10">
+                    <h1 className="font-bold text-[4rem] text-center">404</h1>
+                    <h2 className="font-semibold text-[1.5rem] text-center">Produto não encontrado</h2>
+                </div>
+            </>
+        )}
 
-    return (
-        <>
-            <ProductInfoContext.Provider value={product}>
-                <main className="flex justify-center">
-                    <div className="grid grid-cols-2 gap-x-12 mg-0 px-4 py-8 lg:max-w-350">
-                        <Breadcrumbs items={productPaths} />
-                        <ProductGallery />
-                        <ProductPurchasePanel />
-                        <ProductInfoTabs />
-                        <RelatedProducts />
-                    </div>
-                </main>  
-            </ProductInfoContext.Provider>
-        </>
-    )
+        return (
+            <>
+                <ProductInfoContext.Provider value={product}>
+                    <main className="flex justify-center">
+                        <div className="grid grid-cols-2 gap-x-12 mg-0 px-4 py-8 lg:max-w-350">
+                            <Breadcrumbs items={productPaths} />
+                            <ProductGallery />
+                            <ProductPurchasePanel />
+                            <ProductInfoTabs />
+                            <RelatedProducts />
+                        </div>
+                    </main>  
+                </ProductInfoContext.Provider>
+            </>
+        )
+
 }
