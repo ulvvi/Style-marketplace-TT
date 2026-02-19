@@ -28,7 +28,7 @@ function App() {
           </CartProvider>
         </UserProvider>
         <Routes>
-          <Route path="/" element={<Settings />}/>
+          <Route path="/" element={<Orders />}/>
           
         </Routes>
       </BrowserRouter>
