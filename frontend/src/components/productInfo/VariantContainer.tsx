@@ -1,18 +1,7 @@
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { Button } from "../Button";
 import { IconButton } from "../IconButton";
-
-interface Variant {
-    id: number;
-    color: string;
-    size: string;
-    stock: number;
-    productId: number;
-}
-
-interface VariantContainerProps {
-    variants: Variant[];
-}
+import { ProductInfoContext } from "../../pages/ProductInfo";
 
 const colorMap: Record<string, string> = {
     "black": "#000000",
@@ -23,27 +12,30 @@ const colorMap: Record<string, string> = {
 
 const sizes: string[] = ["XS", "S", "M", "L", "XL"]
 
-export function VariantContainer({variants}:VariantContainerProps) {
+export function VariantContainer() {
     const [currentColor, setCurrentColor] = useState<string | null>(null)
     const [currentSize, setCurrentSize] = useState<string | null>(null)
     const [currentQuantity, setCurrentQuantity] = useState(1)
-    
+    const product = useContext(ProductInfoContext)
+    const variants = product?.variant
+
+
     const currentVariant = useMemo(() => {
         if (!(currentSize && currentColor)) return null;
-        return variants.find((variant) => variant.color === currentColor && variant.size === currentSize) || null;
+        return variants?.find((variant) => variant.color === currentColor && variant.size === currentSize) || null;
     },[variants, currentColor, currentSize])
 
     const productColors = useMemo(() => {
-        return Array.from(new Set(variants.map((variant) => variant.color)))
+        return Array.from(new Set(variants?.map((variant) => variant.color)))
     },[variants])
 
     const isSizeOnStock = ((size: string | null, color: string | null = currentColor) => {
         if (!color) return false;
-        return variants.some((variant) => variant.color == color && variant.size === size && variant.stock > 0)
+        return variants?.some((variant) => variant.color == color && variant.size === size && variant.stock > 0)
     })
 
     const isColorOnStock = ((color: string) => {
-        return variants.some((variant) => variant.color === color && variant.stock > 0)
+        return variants?.some((variant) => variant.color === color && variant.stock > 0)
     })
 
     const handleChangeColor = ((color: string) => {
