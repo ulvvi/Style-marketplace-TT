@@ -95,6 +95,11 @@ router.post("/order/:userId",
     ensureOwner,
     orderController.createOrder);
 
+router.get("/order/:userId",
+    authenticateJWT,
+    ensureOwner,
+    orderController.getUserOrders);
+
 //usuario
 router.post("/signUp", 
     validateRequestBody(userValidation.signUpVal),
