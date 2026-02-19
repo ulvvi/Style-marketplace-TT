@@ -2,6 +2,7 @@ import { useContext, useMemo, useState } from "react";
 import { Button } from "../Button";
 import { IconButton } from "../IconButton";
 import { ProductInfoContext } from "../../pages/ProductInfo";
+import { PurchaseActionButtons } from "./PurchaseActionButtons";
 
 const colorMap: Record<string, string> = {
     "black": "#000000",
@@ -19,7 +20,7 @@ const colorMap: Record<string, string> = {
     "purple": "#A855F7",  
 }
 
-export function VariantContainer() {
+export function VariantContainer({}) {
     const [currentColor, setCurrentColor] = useState<string | null>(null)
     const [currentSize, setCurrentSize] = useState<string | null>(null)
     const [currentQuantity, setCurrentQuantity] = useState(1)
@@ -113,6 +114,8 @@ export function VariantContainer() {
                         <span className={`text-[0.875rem] text-tertiary ${currentVariant ? "block" : "hidden"}`}>Max {currentVariant?.stock} items</span>
                     </div>
                 </fieldset>
+                <hr className=" border-(--border-primary)"/>
+                <PurchaseActionButtons variant={currentVariant} quantity={currentQuantity}/>
             </div>
         </>
     )
