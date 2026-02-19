@@ -74,6 +74,9 @@ export class orderController {
         try {
             const orders = await prisma.order.findMany({
                 where: { userId: Number(userId) },
+                orderBy:{
+                    time:'asc'
+                },
                 include: {
                     variants: {
                         include: {
