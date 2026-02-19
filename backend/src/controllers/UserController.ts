@@ -73,7 +73,7 @@ export class UserController{
                 include:{
                     wishlist:true,
                     cart:true,
-                    orders:true,
+                    orders:true
                 }
             })
             res.status(200).json(user);
@@ -115,7 +115,7 @@ export class UserController{
                 email: email,
                 gender: gender,
                 phoneNumber: phoneNumber, 
-                dateBirth: new Date(dateBirth),
+                dateBirth: dateBirth ? new Date(dateBirth) : null,
                 totalOrders: totalOrders,
                 totalRating: totalRating,
                 totalWishlist: totalWishlist,

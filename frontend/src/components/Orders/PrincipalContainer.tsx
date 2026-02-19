@@ -1,172 +1,50 @@
+import { useContext, useEffect, useState } from "react";
 import { ContentBox } from "./ContentBox";
 import { Order } from "./Order";
 import { PersonCardName } from "./PersonCardName";
 import { ProfileContainer } from "./ProfileContainer";
 import { TabList } from "./TabList";
+import { userContext } from "../../contexts/userContext";
+import type { orderInfo, orderVariantInfo, variantInfo, productInfo } from "../../contexts/userContext";
+
 
 export function PrincipalContainer(){
-
-    const variantesTeste: Variant[] = [
-  // --- ITEM 1 (Repetido 1/3) ---
-  {
-    id: 101,
-    color: "Vermelho",
-    size: "42",
-    produtos: {
-      name: "Tênis Nike Air",
-      price: 599.90,
-      rating: 5,
-      numReviews: 120,
-      isOutOfStock: false
-    },
-  },
+  const user = useContext(userContext)
+  const [orderData, setOrderData] = useState<orderInfo[]>()
+  useEffect( ()=>{
+    async function getOrder(){
+      const id = 1;
+      const token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjF9LCJpYXQiOjE3NzE1Mzk2MzMsImV4cCI6MTc3MjE0NDQzM30.Y6IVd7L5qlLvFza9OcOG-D-MiaVQTBZFhFkeLSlKTofdfZz5HCh1VswEP_jnjet8ZRhz3gM1B4Ra5ocozpLbZtwtsb5R3WJg0_2svY1bRf-pkrF9jlLVwpvVXE9Y140a7mh8oKI6-gqcJlJE1JcrXkKXHx72Lhd9itMgOXOmzDOxRXM07MOjFT7FDsyqHExTXfx98gpG173KWp7mxkaaSsPiBqWLkA8Nl0OsbPd-Izre8s05O9SDF9qK2CgGYrtPGe2KPZJmgD7C4y4yiQQFZzhqyAk9tl2ClEKgn473124gjO9k_LJ5J1US665E3MpuIOVACs2pXiOwZLN1WvEdtNpj4u0V7zjA7BOEUs7RjVDWsyhEQEI3OCorhl4CmtJ5cdHzt82JL2V3juxgFq_9O_iMeWW7jq_6dr-qJSDBHsjL9y1BynP9rEDoq_LCf8X77BJgMUKeKkr7j9IxFVMuAg8nHT1lh9SZp0LNxAJ9Is5ariMRH5FqH1cgqhUa0erNuv7Ehacao8Jxxf1bK1eauGLI1-qyH474ePzFmxyWcumX8RMyHooU1i713nuz-hjz_RiLchPDkGpVXPRoh5ZFHuVjq2iptZ7UGDhN0ab24hlrfQ6WYZZu_fhUGKNN1L80WDEjj5b4KP7XCOhhmOrm81D7AABanKsH7nO-ruR4xKs"
+      const url = `http://localhost:3333/order/${id}`
+      try {
+        const response = await fetch(url,{
+          method: "GET",
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        })
+        if(!response.ok){
+          throw new Error(`Response status: ${response.status}`)
+        }
+        const result = await response.json();
+        setOrderData(result);
+        console.log(result)
+      } catch (error:any) {
+        console.error(error.message);
+      }
+      
+    }
+    getOrder();
+  }, [])
+    
+  if(!orderData) return
   
-  // --- ITEM 2 (Único) ---
-  {
-    id: 202,
-    color: "Preto",
-    size: "M",
-    produtos: {
-      name: "Camiseta Básica",
-      price: 49.90,
-      rating: 4,
-      numReviews: 30,
-      isOutOfStock: false
-    },
-  },
-
-  // --- ITEM 1 (Repetido 2/3) ---
-  {
-    id: 101, // Mesmo ID do primeiro
-    color: "Vermelho",
-    size: "42",
-    produtos: {
-      name: "Tênis Nike Air",
-      price: 599.90,
-      rating: 5,
-      numReviews: 120,
-      isOutOfStock: false
-    },
-  },
-
-  // --- ITEM 3 (Repetido 1/2) ---
-  {
-    id: 305,
-    color: "Azul",
-    size: "Único",
-    produtos: {
-      name: "Boné Aba Reta",
-      price: 89.90,
-      rating: 4.5,
-      numReviews: 10,
-      isOutOfStock: false
-    },
-  },
-
-  // --- ITEM 1 (Repetido 3/3) ---
-  {
-    id: 101, // Terceira vez aparecendo
-    color: "Vermelho",
-    size: "42",
-    produtos: {
-      name: "Tênis Nike Air",
-      price: 599.90,
-      rating: 5,
-      numReviews: 120,
-      isOutOfStock: false
-    },
-  },
-
-  // --- ITEM 3 (Repetido 2/2) ---
-  {
-    id: 305, // Segunda vez aparecendo
-    color: "Azul",
-    size: "Único",
-    produtos: {
-      name: "Boné Aba Reta",
-      price: 89.90,
-      rating: 4.5,
-      numReviews: 10,
-      isOutOfStock: false
-    },
-  }
-];
-
-const variantesEletronicos: Variant[] = [
-  // --- ITEM 1: iPhone (1/2) ---
-  {
-    id: 700,
-    color: "Titânio Natural",
-    size: "256GB",
-    produtos: {
-      name: "iPhone 15 Pro",
-      price: 7299.00,
-      rating: 4.9,
-      numReviews: 500,
-      isOutOfStock: false
-    },
-    photo: <div className="w-12 h-12 bg-gray-400 rounded-md border border-gray-600" />
-  },
-
-  // --- ITEM 2: Cabo USB (1/5) ---
-  {
-    id: 888,
-    color: "Branco",
-    size: "2m",
-    produtos: {
-      name: "Cabo USB-C Trançado",
-      price: 49.90,
-      rating: 4.2,
-      numReviews: 1200,
-      isOutOfStock: false
-    },
-    photo: <div className="w-12 h-12 bg-gray-100 rounded-full border border-gray-300" />
-  },
-
-  // --- ITEM 2: Cabo USB (2/5) ---
-  {
-    id: 888,
-    color: "Branco",
-    size: "2m",
-    produtos: { name: "Cabo USB-C Trançado", price: 49.90, rating: 4.2, numReviews: 1200, isOutOfStock: false },
-    photo: <div className="w-12 h-12 bg-gray-100 rounded-full border border-gray-300" />
-  },
-
-  // --- ITEM 3: Fone (Único) ---
-  {
-    id: 901,
-    color: "Preto",
-    size: "Padrão",
-    produtos: {
-      name: "Fone Sony WH-1000XM5",
-      price: 2499.00,
-      rating: 4.8,
-      numReviews: 350,
-      isOutOfStock: false
-    },
-    photo: <div className="w-12 h-12 bg-black rounded-lg shadow-lg" />
-  },
-
-  // --- ITEM 1: iPhone (2/2) ---
-  {
-    id: 700, // ID repetido
-    color: "Titânio Natural",
-    size: "256GB",
-    produtos: { name: "iPhone 15 Pro", price: 7299.00, rating: 4.9, numReviews: 500, isOutOfStock: false },
-    photo: <div className="w-12 h-12 bg-gray-400 rounded-md border border-gray-600" />
-  },
-
-  // --- ITEM 2: Cabo USB (3/5, 4/5, 5/5) ---
-  // Vamos adicionar mais 3 cabos de uma vez
-  { id: 888, color: "Branco", size: "2m", produtos: { name: "Cabo USB-C Trançado", price: 49.90 }, photo: <div className="bg-gray-100" /> },
-  { id: 888, color: "Branco", size: "2m", produtos: { name: "Cabo USB-C Trançado", price: 49.90 }, photo: <div className="bg-gray-100" /> },
-  { id: 888, color: "Branco", size: "2m", produtos: { name: "Cabo USB-C Trançado", price: 49.90 }, photo: <div className="bg-gray-100" /> },
-];
+    
 
     return(
         <>
             <div className="flex max-w-[1400px] flex-col items-center justify-start gap-[32px] mt-[32px] mb-[32px] ">
-            <PersonCardName name={"Jhon Doe"} email={"john.doe@example.com"} orders={2} memberSince={2023}/>
+            <PersonCardName name={user?.firstName} lastName = {user?.lastName} email={user?.email} orders={user?.totalOrders} memberSince={`${user?.memberSince ? new Date(user.memberSince).toISOString().split('-')[0]: 'Unknown'} `}/>
             </div>
             <div className="flex flex-col items-center gap-[8px] w-full">
                 <ProfileContainer/>
@@ -177,18 +55,18 @@ const variantesEletronicos: Variant[] = [
                     buttonIconPos="left" buttonClassName="!w-[155px]">
                     
                     </ContentBox>
-                    <Order 
-                        variantes={variantesTeste} 
-                        orderName="PEDIDO-TESTE-00"
-                        totalPrice={2500.00}
-
-                    />
-                    <Order 
-                        variantes={variantesEletronicos} 
-                        orderName="PEDIDO-TESTE-01"
-                        totalPrice={2500.00}
-                        situations="PROCESSING"
-                    />
+                    
+                    {orderData?.map( (order)=>(
+                      <Order 
+                        orderName= {'ORD-' + new Date(order.time).toISOString().split('-')[0] + '-' + order.id}
+                        variantes={order.variants}
+                        totalPrice={order.totalPrice}
+                        time={new Date(order.time).toISOString().split('T')[0]}
+                        adress={order.address}
+                        rastreio={order.rastreio}
+                        situations={order.situation}
+                        />
+                    ))}
                 </div>
                 
             </div>
