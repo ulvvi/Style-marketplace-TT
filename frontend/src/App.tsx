@@ -28,7 +28,16 @@ function App() {
           </CartProvider>
         </UserProvider>
         <Routes>
-          <Route path="/" element={<Settings />}/>
+          <Route path="/" element={<SignUp/>}/>
+          <Route path="/SignIn" element={<SignIn/>}/>
+          <Route path="/Home" element={<Home />}/>
+          <Route path="/Sales" element={<Sales />}/>
+          <Route path="/Profile" element={<Profile />}/>
+          <Route path="/Profile/Settings" element={<Settings/>}/>
+          <Route path="/Profile/Orders" element={<Orders/>}/>
+          <Route path="/Cart" element={<Cart/>}/>
+          <Route path="/Product/" element={<ProductInfo/>}/>
+          
           
         </Routes>
       </BrowserRouter>
