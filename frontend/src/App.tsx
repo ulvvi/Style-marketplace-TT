@@ -20,7 +20,7 @@ function App() {
       
       <BrowserRouter>
         <Header />
-        <Profile/>
+        <Settings/>
       </BrowserRouter>
     </>
   )
