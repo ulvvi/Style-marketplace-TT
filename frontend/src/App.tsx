@@ -5,13 +5,15 @@ import { BrowserRouter } from 'react-router-dom'
 import { EntranceBoxExtended } from './components/EntranceBoxExtended'
 import { SignUp } from './pages/signUp'
 import { SignIn } from './pages/signIn'
+import { Cart } from './pages/cart'
 
 function App() {
 
   return (
     <>
       <BrowserRouter>
-        <Home/>
+        {/* <Home/> */}
+        <Cart/>
       </BrowserRouter>
     </>
   )
