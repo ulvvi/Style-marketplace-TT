@@ -13,10 +13,11 @@ export const ProductInfoContext = createContext<Product | null>({} as Product)
 export function ProductInfo() {
     const { id } = useParams();
     const {product, loading} = useProduct(id);
-    
+    const formatedProductName = product?.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+
     const productPaths = [
         { label: "Sale", path: "/" },
-        { label: "Premium Cotton T-Shirt", path: "/" }
+        { label: formatedProductName, path: "/product/:id" }
     ]
 
     if(loading){
