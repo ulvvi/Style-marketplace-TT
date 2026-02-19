@@ -57,7 +57,7 @@ export function Navbar() {
                             <Link to="/" >Men</Link>
                         </li>
                         <li className="cursor-pointer hover:text-primary" >
-                            <Link to="/" >Sale</Link>
+                            <Link to="/Sales" >Sale</Link>
                         </li>
                     </div>
                     <li className="hidden w-md max-w-md h-10 lg:inline-block ">
@@ -67,15 +67,16 @@ export function Navbar() {
                     <div className="flex">
                         <li className="lg:hidden">
                             <IconButton iconSrc="/src/assets/icons/searchIcon.svg"></IconButton>
+                           
                         </li>
                         <li className="ml-2">
                             <IconButton iconSrc="/src/assets/icons/heartIcon.svg" onClick={()=>login(email, password)}></IconButton>
                         </li>
                         <li className="ml-2">
-                            <IconButton buttonType="profile" isLogged={isLogged} profileInitials={isLogged ? formatUserName(user!.firstName.toString(), user!.lastName.toString()) : ""} iconSrc="/src/assets/icons/userIcon.svg"></IconButton>
+                            <IconButton link="/Profile" buttonType="profile" isLogged={isLogged} profileInitials={isLogged ? formatUserName(user!.firstName.toString(), user!.lastName.toString()) : ""} iconSrc="/src/assets/icons/userIcon.svg"></IconButton>
                         </li>
                         <li className="ml-2">
-                            <IconButton buttonType="cart" cartItems={cart?.cartQuantity ?? 0} iconSrc="/src/assets/icons/cartIcon.svg"></IconButton>
+                            <IconButton link="/Cart" buttonType="cart" cartItems={cart?.cartQuantity ?? 0} iconSrc="/src/assets/icons/cartIcon.svg"></IconButton>
                         </li>
                     </div>
                 </ul>

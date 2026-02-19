@@ -1,3 +1,5 @@
+import { Link, useNavigate } from "react-router-dom";
+
 interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     iconSrc: string;
     iconSize?: string;
@@ -7,13 +9,14 @@ interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
     isLogged?: boolean;
     profileInitials?: string;
     buttonClassName?: string;
+    link?: string
 }
 
-export function IconButton({iconSrc, iconSize = "w-4 h-4", alt, buttonType = "default", cartItems = 0, isLogged, profileInitials, buttonClassName, ...props}: IconButtonProps) {
-    
+export function IconButton({iconSrc, iconSize = "w-4 h-4", alt, buttonType = "default", cartItems = 0, isLogged, profileInitials, buttonClassName, link, ...props}: IconButtonProps) {
+    const navigate = useNavigate()
     return (
         <>
-            <button className={`${buttonType === "profile" && isLogged ? "p-0" : "p-3 hover:bg-[#F3F4F6]"} h-10 w-10 rounded-[10px] relative cursor-pointer ${buttonClassName}`} {...props}>
+            <button onClick={ ()=>navigate(`${link}`)} className={`${buttonType === "profile" && isLogged ? "p-0" : "p-3 hover:bg-[#F3F4F6]"} h-10 w-10 rounded-[10px] relative cursor-pointer ${buttonClassName}`} {...props}>
                 <img src={iconSrc} alt={alt} className={`${buttonType === "profile" && isLogged ? "hidden" : "block"}`}/>
                 <div className={`${buttonType === "profile" && isLogged ? "block" : "hidden"} h-10 w-10 flex items-center justify-center rounded-full relative bg-[#F3F4F6] overflow-hidden`}>
                     <span className="text-[0.875rem] font-semibold">{profileInitials}</span>
