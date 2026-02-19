@@ -10,7 +10,7 @@ interface ButtonIntegrationProps {
 export function ButtonIntegration({
     icone = <div className="w-6 h-6 bg-gray-200 rounded-full" />,
     texto = "Clique aqui",
-    link="/"}:ButtonIntegrationProps) {
+    link}:ButtonIntegrationProps) {
     const navigate = useNavigate();
 
     const renderIcone = () => {
@@ -24,7 +24,7 @@ export function ButtonIntegration({
     return (
     <> 
         
-        <button className="w-full h-[40px] flex items-center justify-center  cursor-pointer border-[1px] border-[#E5E7EB] rounded-[10px] border-solid hover:bg-gray-100" onClick={() => navigate(link)}>
+        <button type='button' className="w-full h-[40px] flex items-center justify-center  cursor-pointer border-[1px] border-[#E5E7EB] rounded-[10px] border-solid hover:bg-gray-100" onClick={() => navigate(link)}>
             <div className="w-[24px] h-[16px] mr-2 flex items-center justify-center ">
                 {renderIcone()}
             </div>

@@ -35,13 +35,12 @@ export function EntranceBoxExtended() {
     try {
         console.log("Enviando dados...", payload); // Para você ver o que está indo
 
-        const response = await axios.post('http://localhost:5173/signUp', payload);
+        const response = await axios.post('http://localhost:3333/signUp', payload);
         
         console.log("SUCESSO! Resposta do Backend:", response.data);
         alert("Usuário criado! Olhe o console ou o banco."); 
 
     } catch (error) {
-        // Se der erro, vai aparecer vermelho no console do navegador (F12)
         console.error("ERRO AO CRIAR:", error);
     }
 };
@@ -77,7 +76,6 @@ export function EntranceBoxExtended() {
         let hasError = false;
         let newErrors = {};
 
-        // Validação básica de senha
         if (formData.password && formData.password !== formData.confirmPassword) {
             newErrors = { ...newErrors, confirmPassword: "As senhas não coincidem." };
             hasError = true;
