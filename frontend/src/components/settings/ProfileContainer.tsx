@@ -89,6 +89,10 @@ export function ProfileContainer (  ){
         }
     }
 
+    //att o estado da preferencia em questao. dentro do componente de switch button, espera-se uma prop com args string e bool,
+    //e, quando ocorre o evento de onClick, ela executa essa funcao passada pela prop passando como argumento o proprio nome do switch
+    //em questao e o inverso de seu valor atual. com isso, é possivel trocar o estado do botao de acordo com esses 2 argumentos passados
+    //dentro dele
     function handleSwitchChange(name: string, newValue: boolean){
         setPreferencesData((prevData) =>{
             if(!prevData) return
