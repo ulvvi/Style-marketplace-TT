@@ -84,6 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = () => {
     setUser(null);
     localStorage.removeItem('styleUserData');
+    localStorage.removeItem('styleUserId')
     localStorage.removeItem('styleToken');
   };
 
