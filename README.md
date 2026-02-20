@@ -37,8 +37,9 @@ Com os comandos abaixo, será feita a configuração da pasta `back`:
 
 ``` bash
 $ cd ..
-$ cd back
-$ npm run migrate
+$ cd backend
+$ npx prisma migrate dev
+$ npx prisma generate
 $ npm run seed
 $ npm run keys
 ```
@@ -55,6 +56,6 @@ Com as configurações feitas, mude a seguir para a pasta `front`, para a execu�
 
 ``` bash
 cd ..
-cd front
+cd frontend
 npm run dev
 ```
