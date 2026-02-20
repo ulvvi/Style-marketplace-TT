@@ -9,6 +9,7 @@ import { categoryController } from "../controllers/categoryController";
 import { cartController } from "../controllers/cartController";
 import { orderController } from "../controllers/orderController";
 import { saleController } from "../controllers/saleController";
+import { collectionController } from "../controllers/collectionController";
 
 import  photoUpload  from "../config/uploader"
 
@@ -186,6 +187,15 @@ router.delete("/category/:categoryId/product/:productId",
     categoryController.delFromCategory);
 router.delete("/category/:id", categoryController.deleteCategory);
 router.delete("/category/:categoryId/product/:productId", categoryController.delFromCategory)
+
+// Rota da coleção
+router.post("/collection", collectionController.createCollection);
+router.get("/collections", collectionController.readAllCollections);
+router.get("/collection/:id", collectionController.readCollection);
+router.put("/collection/:id", collectionController.updateCollection);
+router.put("/collection/:productId/del", collectionController.delFromCollection)
+router.put("/collection/:collectionId/product/:productId", collectionController.addToCollection)
+router.delete("/collection/:id", collectionController.deleteCollection);
 
 //sale router
 router.post("/sale", saleController.createSale);

@@ -1,19 +1,13 @@
+import { useProduct, type Product } from "../hooks/useProduct";
 import { Button } from "./Button";
 import { SvgIconProduct } from "./SvgIconProduct";
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 type badgeType = 'Best Seller' | 'New' | 'Sale' | 'Premium' | 'Limited Time' 
         | 'Flash Sale' | 'Luxury Sale' | 'Summer Sale' | 'Sport Sale' | 'Out Of Stock'
 interface ProductCardProps {
-    title: string;
-    ratingAvg: number;
-    ratingQuantity?: number;
-    currentPrice: number;
-    oldPrice?: number;
-    category?: 'Tops'| 'Bottoms' | 'Dresses' | 'Shoes' | 'Acessories';
+    product: Product;
     productBadge?: badgeType[]
-    
-
     cardStyle?: 'Home' | 'Sales'| 'Wishlist' |  'ProductInfo';
     imgSrc?: string;
     imgAlt?: string;
@@ -21,11 +15,12 @@ interface ProductCardProps {
 
 
 
-export function ProductCard({title="product", ratingAvg=0, ratingQuantity=0, currentPrice=0, oldPrice, productBadge=[], imgSrc="/src/assets/placeholder.svg", imgAlt, cardStyle, category}:ProductCardProps) {
+export function ProductCard({productBadge=[], imgSrc="/src/assets/placeholder.svg", imgAlt, cardStyle, product}:ProductCardProps) {
     const isHome = cardStyle === 'Home'
     const isSales = cardStyle === 'Sales'
     const isWishlist = cardStyle === 'Wishlist'
     const isProductInfo = cardStyle === 'ProductInfo'
+    const formatedProductName = product?.name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
 
     let saving = ''
 
@@ -39,8 +34,8 @@ export function ProductCard({title="product", ratingAvg=0, ratingQuantity=0, cur
     }
 
     if(isSales){
-        const discount = Math.round( (1 - (currentPrice/(oldPrice as number)))*100 ) 
-        const numericDiscount = oldPrice as number - currentPrice;
+        const discount = product?.SalePrice ? Math.round( (1 - (product?.SalePrice/(product?.price as number)))*100 ) : 0;
+        const numericDiscount = product?.SalePrice ? product?.price as number - product?.SalePrice : 0;
         saving = (`Save $${numericDiscount.toString()}`)
         allBadges.unshift(`-${discount.toString()}%`)
     }
@@ -91,36 +86,36 @@ export function ProductCard({title="product", ratingAvg=0, ratingQuantity=0, cur
                     ${isProductInfo ? "h-32 lg:" : "h-auto"}`}>
                     
                     <div className={` ${!(isHome || isProductInfo) ? 'flex justify-between' : 'hidden'}`}>
-                        <span className="font-semibold text-[0.75rem] py-0.5 border-(--border-primary) border rounded-full px-2.75">{category}</span>
+                        <span className="font-semibold text-[0.75rem] py-0.5 border-(--border-primary) border rounded-full px-2.75">{product?.categories ? product?.categories[0]?.type : ""}</span>
                         <div className="text-[0.875rem] flex items-center gap-1">
                             <img src="/src/assets/icons/starIcon.svg"></img>
-                            <span className="font-semibold">{ratingAvg}</span>
-                            <span className="font-normal text-tertiary ml-1">({ratingQuantity})</span>
+                            <span className="font-semibold">{product?.rating.toFixed(1)}</span>
+                            <span className="font-normal text-tertiary ml-1">({product?.numOfReviews})</span>
                         </div>
                     </div>
 
                     <h3 className={`text-primary font-semibold
-                        ${isProductInfo ? "text-[1rem]" : "text-[1.125rem]"}`}>{title}</h3>
+                        ${isProductInfo ? "text-[1rem]" : "text-[1.125rem]"}`}>{formatedProductName}</h3>
                     {/*to escondendo essa div que mostra o rating caso n seja a home. pelo que eu vi so a tela de home e order
                     tem essa mesma disposicao do rating abaixo do nome, entao acho q da pra deixar assim. o estilo da tela de order,
                     inclusive, me parece o mesmo da de home*/}
                     <div className={`text-[0.875rem] flex items-center gap-1 ${(isHome || isProductInfo) ? '' : 'hidden'}`}>
                         <img src="/src/assets/icons/starIcon.svg"></img>
-                        <span className={`${isProductInfo ? "font-normal" : "font-semibold"}`}>{ratingAvg}</span>
+                        <span className={`${isProductInfo ? "font-normal" : "font-semibold"}`}>{product?.rating.toFixed(1)}</span>
                         <span className={`font-normal text-tertiary ml-1 
-                        ${isProductInfo ? "hidden" : "block"}`}>({ratingQuantity})</span>
+                        ${isProductInfo ? "hidden" : "block"}`}>({product?.numOfReviews})</span>
                     </div>
                     <div className= {`flex  ${!(isHome || isProductInfo) ? 'flex-col gap-y-2' : 'justify-between '}`}>
                         <div className="flex gap-2 items-center">
-                            <span className={`text-[1.25rem] font-bold ${isProductInfo ? "text-[1rem]" : "text-[1.125rem]"} ${priceColor}`}>${currentPrice}</span>
-                            <span className={`text-[0.875rem] font-normal text-tertiary line-through ${oldPrice ? "inline-block" : "hidden"} `}>${oldPrice}</span>
+                            <span className={`text-[1.25rem] font-bold ${isProductInfo ? "text-[1rem]" : "text-[1.125rem]"} ${priceColor}`}>${product?.SalePrice ? product?.SalePrice : product?.price}</span>
+                            <span className={`text-[0.875rem] font-normal text-tertiary line-through ${product?.SalePrice ? "inline-block" : "hidden"} `}>${product?.price}</span>
                             <div className={`${!isSales ? 'hidden' : 'flex'} bg-[#EF4343]  items-center text-white py-0.75 px-2.75 rounded-[100rem] h-5.5 `}>
                                 <span className=" font-semibold text-[0.75rem] ">{saving}</span>
                             </div>
                         </div>
                         <div className={`${isProductInfo ? 'w-14' :
                             !isHome ? 'w-full flex gap-2' : 'w-25'}`}> 
-                            <Button texto={`${isProductInfo ? "View" : "Add to Cart"}`} color={buttonColor} link="" buttonClassName="h-[length:36px]"  iconSrc={!(isHome || isProductInfo) ? "src/assets/icons/cartIconWhite.svg" : undefined} iconPos="left"/>
+                            <Button texto={`${isProductInfo ? "View" : "Add to Cart"}`} color={buttonColor} link={isProductInfo ? `/product/${product.id}` : ""} buttonClassName="h-[length:36px]"  iconSrc={!(isHome || isProductInfo) ? "src/assets/icons/cartIconWhite.svg" : undefined} iconPos="left"/>
                             <SvgIconProduct onClick={likeProduct} path={`${isLiked ?'src/assets/icons/heartFilled.svg' : 'src/assets/icons/heartIcon.svg' }`} alt="Ícone para salvar na wishlist" border="true" className={`${(isHome || isProductInfo) ? 'hidden' : ''}`}/>
                         </div>
                     </div>

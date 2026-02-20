@@ -14,7 +14,7 @@ interface Cart {
 
 interface CartContextType {
     cart: Cart | null,
-    addToCart: (variantId: number) => Promise<void>
+    addToCart: (variantId: number, quantity: number) => Promise<void>
     removeFromCart: (variantId: number) => Promise<void>
 }
 
@@ -51,7 +51,7 @@ export function CartProvider({children}:{children: ReactNode}) {
         }
     }, [user, isLogged]);
 
-    async function addToCart(variantId: number){
+    async function addToCart(variantId: number, quantity: number){
         if(isLogged && user?.id){
             const response = await fetch(`http://localhost:3333/cart/${user.id}`, {
                         method: "POST",

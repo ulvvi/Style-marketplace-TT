@@ -4,7 +4,11 @@ import { prisma } from "../config/prisma";
 export class cartController {
   public static async addVariantToCart(req: Request, res: Response) {
     const { userId } = req.params;
-    const { variantId } = req.body;
+    const { variantId , quantity = 1 } = req.body;
+
+    if (quantity <= 0) {
+      return res.status(400).json({ error: "A quantidade deve ser maior que zero." });
+    }
 
     try {
 
@@ -29,6 +33,9 @@ export class cartController {
       const updatedCart = await prisma.$transaction(async (tx) => {
         const existingItem = cart.cartVariants.find(cv => cv.variantId === variantId);
 
+        const quantityInCart = existingItem ? existingItem.quantity : 0;
+        if (quantityInCart + quantity > variant.stock) throw new Error ("Estoque insuficiente");
+
         //tirei o updatedcart porque estava dando problema
         if (existingItem) {
           // se ja tem o item, so aumenta a quantidade
@@ -36,23 +43,25 @@ export class cartController {
             where: { 
                 cartId_variantId: { cartId: cart.id, variantId: variantId } 
             },
-            data: { quantity: { increment: 1 } }
+            data: { quantity: { increment: quantity } }
           });
         } else {
           await tx.cartVariant.create({
             data: {
               cartId: cart.id,
               variantId: variantId,
-              quantity: 1
+              quantity: quantity
             }
           });
         }
 
+        const additionalCost = quantity * price;
+
         return tx.cart.update({
           where: { id: cart.id },
           data: {
-            subtotal: { increment: price },
-            totalCost: { increment: price }
+            subtotal: { increment: additionalCost },
+            totalCost: { increment: additionalCost }
           },
           include: { 
             cartVariants: { 

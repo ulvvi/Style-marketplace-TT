@@ -150,8 +150,10 @@ model Product {
   isOutOfStock Boolean
   photoUrl String?
   saleId Int?
-  
+  collectionId Int?
+  description String
 
+  collection  Collection?  @relation(fields: [collectionId], references: [id], onDelete: SetNull)
   variant Variant[]
   review Review[]
   wishlistProducts WishlistProduct[]
@@ -207,5 +209,13 @@ model ProductCategory{
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@id([productId, categoryId])
+
+}
+
+model Collection {
+  id Int @id @default(autoincrement())
+  type String @unique
+
+  products Product[]
 
 }
