@@ -49,7 +49,7 @@ export function ProductGallery({productPics = new Array(4).fill({imgSrc: "/src/a
             }
         }
         requestWishlistStatus();
-}, [])
+}, [isLogged, user?.id, product?.id])
 
     async function toggleLike(){
         if (isLogged && product && user?.id){   
