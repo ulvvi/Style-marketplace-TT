@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false); 
 
   useEffect(() => {
-    const userStorage = localStorage.getItem('styleUserId');
+    const userStorage = localStorage.getItem('styleUserData');
     
     if (userStorage) {
       setUser(JSON.parse(userStorage));
@@ -67,7 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
             const dadosReais = userResponse.data;
             setUser(dadosReais);
-            localStorage.setItem('styleUserId', JSON.stringify(dadosReais));
+            localStorage.setItem('styleUserData', JSON.stringify(dadosReais));
 
         } catch (erroGet: any) {
             console.error("Erro obtido: ", erroGet.response?.data);
@@ -83,7 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
   const signOut = () => {
     setUser(null);
-    localStorage.removeItem('styleUserId');
+    localStorage.removeItem('styleUserData');
     localStorage.removeItem('styleToken');
   };
 
