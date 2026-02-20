@@ -1,7 +1,7 @@
 import { Header } from "../components/Header";
 import ReturnButton from "../components/cart/ReturnButton";
 import { CartSection } from "../components/cart/cartSection";
-import { CartProvider } from "../components/cart/cartContext";
+import { CartProvider } from "../contexts/CartProvider";
 import { PromoCode } from "../components/cart/promoCode";
 import { OrderSummary } from "../components/cart/orderSummary";
 import { useTitle } from "../hooks/useTitle";
