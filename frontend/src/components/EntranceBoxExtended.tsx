@@ -91,67 +91,77 @@ export function EntranceBoxExtended() {
     const { signIn } = useAuth();
 
     const loginWithGoogle = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-        try {
-            const dados = await axios.get(
-                'https://www.googleapis.com/oauth2/v3/userinfo',
-                { headers: { Authorization: `Bearer ${tokenResponse.access_token}` } }
-            );
-            
-            
-            const senhaAutomatica = `Google_${dados.data.sub}_${Math.random().toString(36).slice(-8)}!@#`;
+        onSuccess: async (tokenResponse) => {
+            try {
+                const dados = await axios.get(
+                    'https://www.googleapis.com/oauth2/v3/userinfo',
+                    { headers: { Authorization: `Bearer ${tokenResponse.access_token}` } }
+                );
 
-            const payload: UserPayload = {
-                firstName: dados.data.given_name,
-                lastName: dados.data.family_name || '', 
-                email: dados.data.email,
-                password: senhaAutomatica,
-                marketingEmail: false
-            };
+                const emailGoogle = dados.data.email;
+                const senhaGoogle = "Google_1234_abc!@#";
 
-            await signUp(payload);
-            
-            // Loga a pessoa no React
-            signIn({
-                firstName: dados.data.given_name,
-                lastName: dados.data.family_name,
-                email: dados.data.email,
-                picture: dados.data.picture
-            });
+                try {
+                    await signUp({
+                        firstName: dados.data.given_name || "Usuário",
+                        lastName: dados.data.family_name || "",
+                        email: emailGoogle,
+                        password: senhaGoogle, 
+                        marketingEmail: false 
+                    });
+                } catch (criaContaErro: any) {
+                    if (criaContaErro.message !== "Email já existente") {
+                        throw criaContaErro;
+                    }
+                }
 
-        } catch (error) {
-            console.error(error);
-            window.alert("Erro ao criar conta com o Google.");
-        }
-    }
-});
+                
+                await signIn({
+                    email: emailGoogle,
+                    password: senhaGoogle
+                });
+
+                window.alert("Conectado");
+                navigate('/'); 
+
+            } catch (error: any) {
+                window.alert(error.message || "Erro ao conectar com Google");
+            }
+        },
+        onError: () => console.log("Erro no login do Google")
+    });
 
     const loginWithFacebook = async (response: any) => {
-    try {
-        const senhaAutomatica = `Face_${response.id}_${Math.random().toString(36).slice(-8)}!@#`;
+        try {
+            const emailFace = response.email;
+            const senhaFace = "Facebook_1234_abc!@#";
 
-        const payload: UserPayload = {
-            firstName: response.first_name, 
-            lastName: response.last_name || '',
-            email: response.email,
-            password: senhaAutomatica, 
-            marketingEmail: false
-        };
+            try {
+                await signUp({
+                    firstName: response.first_name || "Usuário", 
+                    lastName: response.last_name || "",
+                    email: emailFace,
+                    password: senhaFace, 
+                    marketingEmail: false
+                });
+            } catch (criaContaErro: any) {
+                if (criaContaErro.message !== "Email já existente") {
+                    throw criaContaErro; 
+                }
+            }
 
-        await signUp(payload);
+            await signIn({
+                email: emailFace,
+                password: senhaFace
+            });
+            
+            window.alert("Conectado");
+            navigate('/');
 
-        signIn({
-            firstName: response.first_name, 
-            lastName: response.last_name,
-            email: response.email,
-            picture: response.picture?.data?.url
-        });
-
-    } catch (error) {
-        console.error(error);
-        window.alert("Erro ao criar conta com o Facebook.");
-    }
-};
+        } catch (error: any) {
+             window.alert(error.message || "Erro ao conectar com Facebook");
+        }
+    };
 
   
     return (

@@ -19,9 +19,14 @@ export interface UserPayload {
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  signIn: (userData: User) => void;
+  signIn: (payload: SignInPayload) => Promise<void>;
   signOut: () => void;
   signUp: (payload: UserPayload) => Promise<void>; 
+}
+
+export interface SignInPayload {
+  email: string;
+  password: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -40,11 +45,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
 
-  const signIn = (userData: User) => {
-    setUser(userData);
-    localStorage.setItem('usuarioLogado', JSON.stringify(userData));
-  };
+  const signIn = async (payload: SignInPayload) => {
+    setIsLoading(true);
+    try {
+        const response = await axios.post('/signIn', payload); 
+        const token = response.data.token;
+        localStorage.setItem('styleToken', token);
 
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const tokenDecodificado = JSON.parse(decodeURIComponent(window.atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join('')));
+        
+        const userId = tokenDecodificado.sub.id; 
+
+        try {
+            const userResponse = await axios.get(`/user/${userId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            const dadosReais = userResponse.data;
+            setUser(dadosReais);
+            localStorage.setItem('usuarioLogado', JSON.stringify(dadosReais));
+
+        } catch (erroGet: any) {
+            console.error("Erro obtido: ", erroGet.response?.data);
+            throw new Error("Erro na validação do backend ao buscar usuário.");
+        }
+
+    } catch (error: any) {
+        console.error("Erro geral:", error);
+        throw new Error(error.message || "Erro desconhecido"); 
+    } finally {
+        setIsLoading(false);
+    }
+  };
   const signOut = () => {
     setUser(null);
     localStorage.removeItem('usuarioLogado');
