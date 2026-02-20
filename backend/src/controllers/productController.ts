@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../config/prisma";
+import { de } from "zod/locales";
 
 // Class do Product
 export class productController {
@@ -14,6 +15,7 @@ export class productController {
         color,
         size,
         stock,
+        description,
       } = request.body;
 
       const createdProduct = {
@@ -22,6 +24,7 @@ export class productController {
         price: price,
         numOfReviews: numOfReviews,
         isOutOfStock: isOutOfStock,
+        description: description,
         // Quando se cria um produto, automaticamente, uma variante é criada.
         variant: {
           // Isso já cria a variante vinculado com o ID do produto recém-criado
@@ -45,7 +48,9 @@ export class productController {
 
   public static async readAllProduct(request: Request, response: Response) {
     try {
-      const foundAllProduct = await prisma.product.findMany();
+      const foundAllProduct = await prisma.product.findMany({
+        include: { collection: true }
+      });
 
       response.status(200).json(foundAllProduct);
     } catch (error: any) {
@@ -64,6 +69,7 @@ export class productController {
         include: { 
           variant: true, 
           review: true, 
+          collection: true,
           categories: {             
                 select: {
                     category: true
@@ -71,7 +77,16 @@ export class productController {
             } },
       });
 
-      response.status(200).json(foundProduct);
+      if (!foundProduct) {
+        return response.status(404).json({message: "Produto não encontrado"})
+      }
+
+      const formattedProduct = {
+        ...foundProduct,
+        categories: foundProduct?.categories.map(c => c.category)
+      }
+
+      response.status(200).json(formattedProduct);
     } catch (error: any) {
       response.status(500).send({ message: error.message });
     }
@@ -107,6 +122,29 @@ export class productController {
         where: { id: parseInt(id as string) },
       });
       response.status(200).json(deletedProduct);
+    } catch (error: any) {
+      response.status(500).json({ message: error.message });
+    }
+  }
+
+  public static async postImage(request: Request, response: Response) {
+    try {
+      const { id } = request.params;
+
+      if (!request.file) {
+        return response.status(400).json({ message: "Nenhum arquivo foi enviado" });
+      }
+
+      const photoUrl = `/uploads/photos/${request.file.filename}`;
+
+      const updatedProduct = await prisma.product.update({
+        where: { id: parseInt(id as string) },
+        data: {
+          photoUrl: photoUrl,
+        },
+      });
+
+      response.status(200).json(updatedProduct);
     } catch (error: any) {
       response.status(500).json({ message: error.message });
     }

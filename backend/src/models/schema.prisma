@@ -26,16 +26,11 @@ enum OrderStatus {
 }
 
 enum CategoryType {
-  BEST_SELLER
-  NEW
-  SALE
-  PREMIUM
-  LIMITED_TIME
-  FLASH_SALE
-  LUXURY_SALE
-  SUMMER_SALE
-  SPORT_SALE
-  OUT_OF_STOCK
+  TOPS
+  BOTTOMS
+  SHOES
+  DRESSES
+  ACCESSORIES
 
 }
 
@@ -52,6 +47,7 @@ model User{
   totalOrders Int @default(0)
   totalRating Float @default(0)
   totalWishlist Int @default(0)
+  memberSince DateTime @default(now())
 
   emailNotification Boolean @default(true)
   smsNotification Boolean @default(false)
@@ -147,8 +143,12 @@ model Product {
   SalePrice Float?
   numOfReviews Int
   isOutOfStock Boolean
+  photoUrl String?
   saleId Int?
+  collectionId Int?
+  description String
 
+  collection  Collection?  @relation(fields: [collectionId], references: [id], onDelete: SetNull)
   variant Variant[]
   review Review[]
   wishlistProducts WishlistProduct[]
@@ -204,5 +204,13 @@ model ProductCategory{
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@id([productId, categoryId])
+
+}
+
+model Collection {
+  id Int @id @default(autoincrement())
+  type String @unique
+
+  products Product[]
 
 }

@@ -9,6 +9,9 @@ import { categoryController } from "../controllers/categoryController";
 import { cartController } from "../controllers/cartController";
 import { orderController } from "../controllers/orderController";
 import { saleController } from "../controllers/saleController";
+import { collectionController } from "../controllers/collectionController";
+
+import  photoUpload  from "../config/uploader"
 
 import userValidation from "../middlewares/userValidation";
 import { validateRequestBody } from "../middlewares/ValidateSchemaBody";
@@ -17,6 +20,9 @@ import wishlistValidation from "../middlewares/wishlistValidation";
 import productValidation from "../middlewares/productValidation";
 import variantValidation from "../middlewares/variantValidation";
 import reviewValidation from "../middlewares/reviewValidation";
+import cartValidation from "../middlewares/cartValidation";
+import orderValidation from "../middlewares/orderValidation";
+import categoryValidation from "../middlewares/categoryValidation";
 
 
 const router = Router();
@@ -36,6 +42,10 @@ router.put("/product/:id",
 router.delete("/product/:id", 
     validateRequestParams(ValidateSchemaParams.getSelfId),
     productController.deleteProduct);
+router.post("/product/:id/uploadphoto",
+    validateRequestParams(ValidateSchemaParams.getSelfId),
+    photoUpload.single("photoUrl"),
+    productController.postImage);
 
 // Rota da variante
 router.post("/variant/:productId",
@@ -77,23 +87,51 @@ router.delete("/review/:id",
 
 // Cart router
 router.post("/cart/:userId", 
+    validateRequestParams(ValidateSchemaParams.getUserId),
     authenticateJWT,
     ensureOwner,
+    validateRequestBody(cartValidation.addVariantToCartVal),
     cartController.addVariantToCart);
 router.delete("/cart/:userId", 
+    validateRequestParams(ValidateSchemaParams.getUserId),
     authenticateJWT,
     ensureOwner,
+    validateRequestBody(cartValidation.removeVariantVal),
     cartController.removeVariant);
-router.get("/cart/:userId", 
-    authenticateJWT,
-    ensureOwner,
-    cartController.getCart);
+router.get("/cart/:userId",
+  validateRequestParams(ValidateSchemaParams.getUserId),
+  authenticateJWT,
+  ensureOwner,
+  cartController.getCart);
+
+router.patch("/cart/:userId",
+  validateRequestParams(ValidateSchemaParams.getUserId),
+  authenticateJWT,
+  ensureOwner,
+  validateRequestBody(cartValidation.updateQuantityVal), // { variantId: number, quantity: number }
+  cartController.updateQuantity);
+
+
+router.post("/cart/:userId/promo",
+  validateRequestParams(ValidateSchemaParams.getUserId),
+  authenticateJWT,
+  ensureOwner,
+  validateRequestBody(cartValidation.applyPromoVal), // { code: string }
+  cartController.applyPromoCode);
+
+
 
 // Order router
 router.post("/order/:userId", 
     authenticateJWT,
     ensureOwner,
     orderController.createOrder);
+router.get("/order/:userId",
+    authenticateJWT,
+    ensureOwner,
+    orderController.getUserOrders);
+router.put("/order/:orderId",
+    orderController.updateSituation)
 
 //usuario
 router.post("/signUp", 
@@ -121,6 +159,7 @@ router.delete("/user/:userId",
     ensureOwner, 
     UserController.deleteUser);
 
+
 //wishlist
 router.get("/user/:userId/wishlist",
     validateRequestParams(ValidateSchemaParams.getUserId),
@@ -137,17 +176,41 @@ router.put("/user/:userId/wishlist/del",
     validateRequestParams(ValidateSchemaParams.getUserId),
     validateRequestBody(wishlistValidation.delWishlistVal),
     authenticateJWT, 
-    ensureOwner, 
+    ensureOwner,
     Wishlist.DelFromWishlist);
 
-// Rota do produto
-router.post("/category", categoryController.createCategory);
-router.post("/category/:categoryId/product/:productId", categoryController.addToCategory)
+// Rota da categoria
+router.post("/category", 
+    validateRequestBody(categoryValidation.createCategoryVal),
+    categoryController.createCategory);
+router.post("/category/:categoryId/product/:productId", 
+    validateRequestParams(categoryValidation.addToCategoryVal),
+    categoryController.addToCategory);
 router.get("/categories", categoryController.readAllCategories);
-router.get("/category/:id", categoryController.readCategory);
-router.put("/category/:id", categoryController.updateCategory);
+router.get("/category/:id", 
+    validateRequestParams(ValidateSchemaParams.getSelfId),
+    categoryController.readCategory);
+router.put("/category/:id", 
+    validateRequestParams(ValidateSchemaParams.getSelfId),
+    validateRequestBody(categoryValidation.updateCategoryVal),
+    categoryController.updateCategory);
+router.delete("/category/:id", 
+    validateRequestParams(ValidateSchemaParams.getSelfId),
+    categoryController.deleteCategory);
+router.delete("/category/:categoryId/product/:productId", 
+    validateRequestParams(categoryValidation.delFromCategoryVal),
+    categoryController.delFromCategory);
 router.delete("/category/:id", categoryController.deleteCategory);
 router.delete("/category/:categoryId/product/:productId", categoryController.delFromCategory)
+
+// Rota da coleção
+router.post("/collection", collectionController.createCollection);
+router.get("/collections", collectionController.readAllCollections);
+router.get("/collection/:id", collectionController.readCollection);
+router.put("/collection/:id", collectionController.updateCollection);
+router.put("/collection/:productId/del", collectionController.delFromCollection)
+router.put("/collection/:collectionId/product/:productId", collectionController.addToCollection)
+router.delete("/collection/:id", collectionController.deleteCollection);
 
 //sale router
 router.post("/sale", saleController.createSale);
