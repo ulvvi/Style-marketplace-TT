@@ -15,13 +15,6 @@ export function ProductInfo() {
     const { id } = useParams();
     const {product, loading} = useProduct(id);
 
-    //Login temporario de teste
-    const { login, isLogged } = useContext(UserContext)
-    useEffect(() => {
-        login("josesoares@gmail.com", "teste")
-        console.log(isLogged)
-    }, [])
-    
     if(loading){
         return (
             <></>
