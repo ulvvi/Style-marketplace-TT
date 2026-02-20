@@ -1,99 +1,223 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, useCallback, useRef, type ReactNode } from "react";
 import { UserContext } from "./UserProvider";
 
-interface Cart {
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export interface CartVariantItem {
+  quantity: number;
+  variant: {
     id: number;
-    subtotal: number;
-    shipping: number,
-    tax: number,
-    promoCode: string,
-    totalCost: number,
-    cartVariants: any[],
-    cartQuantity: number
+    color: string;
+    size: string;
+    stock: number;
+    product: {
+      id: number;
+      name: string;
+      price: number;
+      SalePrice: number | null;
+      photoUrl: string | null;
+      isOutOfStock: boolean;
+      brand?: string;
+    };
+  };
+}
+
+interface ApiCart {
+  id: number;
+  subtotal: number;
+  savings: number;
+  shipping: number;
+  tax: number;
+  promoCode: string | null;
+  totalCost: number;
+  cartVariants: CartVariantItem[];
+}
+
+export interface Cart extends ApiCart {
+  cartQuantity: number;
+  totalAvailableItems: number;
+  totalOutOfStockItems: number;
+  couponDiscountValue: number;
+  discountPercent: number;
 }
 
 interface CartContextType {
-    cart: Cart | null,
-    addToCart: (variantId: number, quantity: number) => Promise<void>
-    removeFromCart: (variantId: number) => Promise<void>
+  cart: Cart | null;
+  isLoading: boolean;
+  refreshCart: () => Promise<void>;
+  addToCart: (variantId: number) => Promise<void>;
+  removeFromCart: (variantId: number) => Promise<void>;
+  updateQuantity: (variantId: number, quantity: number) => Promise<void>;
+  applyCoupon: (code: string) => Promise<boolean>;
 }
+
+// ─── Context ──────────────────────────────────────────────────────────────────
 
 export const CartContext = createContext({} as CartContextType);
 
-export function CartProvider({children}:{children: ReactNode}) {
-    const [cartData, setCartData] = useState<Cart | null>(null);
-    const { user, isLogged } = useContext(UserContext);
+export const useCart = () => {
+  const ctx = useContext(CartContext);
+  if (!ctx) throw new Error("useCart must be used inside CartProvider");
+  return ctx;
+};
 
-    const cartQuantity = cartData?.cartVariants?.reduce((acc:number, item:any) => acc + item.quantity, 0) ?? 0
-    const cart: Cart | null = cartData ? {
-        ...cartData, cartQuantity: cartQuantity
-    } : null;
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
-    useEffect(() => {
-        if(isLogged && user?.id){
-            const requestData = async () => {
-                const response = await fetch(`http://localhost:3333/cart/${user.id}`, {
-                    method: "GET",
-                    headers: {
-                    "Content-type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("styleToken")}`
-                    }
-                })
+const API = "http://localhost:3333";
 
-                const data = await response.json();
-                if(response.ok){
-                    setCartData(data);
-                }   
-            }
-            requestData();
-        } else {
-            setCartData(null);
-        }
-    }, [user, isLogged]);
+const VALID_COUPONS: Record<string, number> = {
+  SAVE10: 10,
+  WELCOME20: 20,
+  STUDENTS15: 15,
+};
 
-    async function addToCart(variantId: number, quantity: number){
-        if(isLogged && user?.id){
-            const response = await fetch(`http://localhost:3333/cart/${user.id}`, {
-                        method: "POST",
-                        headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("styleToken")}`
-                        },
-                        body: JSON.stringify({variantId: variantId, quantity: quantity})
-            })
+function authHeaders() {
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("styleToken")}`,
+  };
+}
 
-            const data = await response.json();
-            if(response.ok){
-                setCartData(data)
-            }
-        } 
+function enrichCart(raw: ApiCart, discountPercent: number): Cart {
+  const cartQuantity = raw.cartVariants.reduce((acc, cv) => acc + cv.quantity, 0);
+
+  const totalAvailableItems = raw.cartVariants
+    .filter((cv) => !cv.variant.product.isOutOfStock)
+    .reduce((acc, cv) => acc + cv.quantity, 0);
+
+  const totalOutOfStockItems = raw.cartVariants.filter(
+    (cv) => cv.variant.product.isOutOfStock
+  ).length;
+
+  const couponDiscountValue = raw.subtotal * (discountPercent / 100);
+
+  return {
+    ...raw,
+    cartQuantity,
+    totalAvailableItems,
+    totalOutOfStockItems,
+    couponDiscountValue,
+    discountPercent,
+  };
+}
+
+// ─── Provider ─────────────────────────────────────────────────────────────────
+
+export function CartProvider({ children }: { children: ReactNode }) {
+  const [rawCart, setRawCart] = useState<ApiCart | null>(null);
+  const [discountPercent, setDiscountPercent] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { user, isLogged } = useContext(UserContext);
+
+  // Ref para sempre ter acesso ao userId atual sem precisar de stale closure
+  const userIdRef = useRef<number | null>(null);
+  userIdRef.current = user?.id ?? null;
+
+  const cart: Cart | null = rawCart ? enrichCart(rawCart, discountPercent) : null;
+
+  // ── refreshCart ───────────────────────────────────────────────────────────
+  // Lê userIdRef.current em vez de depender de closure — nunca fica stale.
+  const refreshCart = useCallback(async () => {
+    const uid = userIdRef.current;
+    if (!uid) return; // usuário ainda não carregou ou não está logado
+
+    setIsLoading(true);
+    try {
+      const res = await fetch(`${API}/cart/${uid}`, { headers: authHeaders() });
+
+      if (!res.ok) {
+        console.error(`GET /cart/${uid} retornou ${res.status}`);
+        return;
+      }
+
+      const data: ApiCart = await res.json();
+      setRawCart(data);
+
+      // Restaura o desconto do cupom se já estava salvo no banco
+      if (data.promoCode) {
+        setDiscountPercent(VALID_COUPONS[data.promoCode.toUpperCase()] ?? 0);
+      }
+    } catch (err) {
+      console.error("Erro ao buscar carrinho:", err);
+    } finally {
+      setIsLoading(false);
     }
+  }, []); // sem dependências → função estável, nunca recriada
 
-    async function removeFromCart(variantId: number){
-        if(isLogged && user?.id){
-            const response = await fetch(`http://localhost:3333/cart/${user.id}`, {
-                        method: "DELETE",
-                        headers: {
-                        "Content-type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("styleToken")}`
-                        },
-                        body: JSON.stringify({variantId: variantId})
-            })
-
-            const data = await response.json();
-            if(response.ok){
-                setCartData(data)
-            }
-
-        } 
+  // ── Fetch automático quando isLogged ou user.id muda ─────────────────────
+  useEffect(() => {
+    if (isLogged && user?.id) {
+      refreshCart();
+    } else {
+      setRawCart(null);
+      setDiscountPercent(0);
     }
+  }, [isLogged, user?.id]);
 
+  // ── Add ───────────────────────────────────────────────────────────────────
+  async function addToCart(variantId: number) {
+    const uid = userIdRef.current;
+    if (!uid) return;
+    const res = await fetch(`${API}/cart/${uid}`, {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify({ variantId }),
+    });
+    if (res.ok) setRawCart(await res.json());
+    else console.error("addToCart falhou:", res.status);
+  }
 
-    return (
-        <>
-            <CartContext.Provider value={{cart, addToCart, removeFromCart}}>
-                {children}
-            </CartContext.Provider>
-        </>
-    )
+  // ── Remove ────────────────────────────────────────────────────────────────
+  async function removeFromCart(variantId: number) {
+    const uid = userIdRef.current;
+    if (!uid) return;
+    const res = await fetch(`${API}/cart/${uid}`, {
+      method: "DELETE",
+      headers: authHeaders(),
+      body: JSON.stringify({ variantId }),
+    });
+    if (res.ok) setRawCart(await res.json());
+    else console.error("removeFromCart falhou:", res.status);
+  }
+
+  // ── Update Quantity ───────────────────────────────────────────────────────
+  async function updateQuantity(variantId: number, newQty: number) {
+    const uid = userIdRef.current;
+    if (!uid) return;
+    const res = await fetch(`${API}/cart/${uid}`, {
+      method: "PATCH",
+      headers: authHeaders(),
+      body: JSON.stringify({ variantId, quantity: newQty }),
+    });
+    if (res.ok) setRawCart(await res.json());
+    else console.error("updateQuantity falhou:", res.status);
+  }
+
+  // ── Apply Coupon ──────────────────────────────────────────────────────────
+  async function applyCoupon(code: string): Promise<boolean> {
+    const uid = userIdRef.current;
+    if (!uid) return false;
+    const res = await fetch(`${API}/cart/${uid}/promo`, {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify({ code }),
+    });
+    if (res.ok) {
+      const data: { discountPercent: number; cart: ApiCart } = await res.json();
+      setDiscountPercent(data.discountPercent);
+      setRawCart(data.cart);
+      return true;
+    }
+    console.error("applyCoupon falhou:", res.status);
+    return false;
+  }
+
+  return (
+    <CartContext.Provider
+      value={{ cart, isLoading, refreshCart, addToCart, removeFromCart, updateQuantity, applyCoupon }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
 }
