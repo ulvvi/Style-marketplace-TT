@@ -1,10 +1,11 @@
 import { prisma } from "../../config/prisma";
 import { seedUsers } from "./userSeeder";
+import { seedProducts } from "./productSeeder";
 
 const main = async () => {
     try {
         await prisma.$connect();
-        await seedUsers(50);
+        await seedProducts(20);
         console.log("Semeadura completa");
 
     } catch(error) {
