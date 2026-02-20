@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../config/prisma";
+import { de } from "zod/locales";
 
 // Class do Product
 export class productController {
@@ -14,6 +15,7 @@ export class productController {
         color,
         size,
         stock,
+        description,
       } = request.body;
 
       const createdProduct = {
@@ -22,6 +24,7 @@ export class productController {
         price: price,
         numOfReviews: numOfReviews,
         isOutOfStock: isOutOfStock,
+        description: description,
         // Quando se cria um produto, automaticamente, uma variante é criada.
         variant: {
           // Isso já cria a variante vinculado com o ID do produto recém-criado
@@ -45,7 +48,9 @@ export class productController {
 
   public static async readAllProduct(request: Request, response: Response) {
     try {
-      const foundAllProduct = await prisma.product.findMany();
+      const foundAllProduct = await prisma.product.findMany({
+        include: { collection: true }
+      });
 
       response.status(200).json(foundAllProduct);
     } catch (error: any) {
@@ -64,6 +69,7 @@ export class productController {
         include: { 
           variant: true, 
           review: true, 
+          collection: true,
           categories: {             
                 select: {
                     category: true

@@ -17,6 +17,7 @@ import wishlistValidation from "../middlewares/wishlistValidation";
 import productValidation from "../middlewares/productValidation";
 import variantValidation from "../middlewares/variantValidation";
 import reviewValidation from "../middlewares/reviewValidation";
+import { collectionController } from "../controllers/collectionController";
 
 
 const router = Router();
@@ -140,7 +141,7 @@ router.put("/user/:userId/wishlist/del",
     ensureOwner, 
     Wishlist.DelFromWishlist);
 
-// Rota do produto
+// Rota da categoria
 router.post("/category", categoryController.createCategory);
 router.post("/category/:categoryId/product/:productId", categoryController.addToCategory)
 router.get("/categories", categoryController.readAllCategories);
@@ -148,6 +149,15 @@ router.get("/category/:id", categoryController.readCategory);
 router.put("/category/:id", categoryController.updateCategory);
 router.delete("/category/:id", categoryController.deleteCategory);
 router.delete("/category/:categoryId/product/:productId", categoryController.delFromCategory)
+
+// Rota da coleção
+router.post("/collection", collectionController.createCollection);
+router.get("/collections", collectionController.readAllCollections);
+router.get("/collection/:id", collectionController.readCollection);
+router.put("/collection/:id", collectionController.updateCollection);
+router.put("/collection/:productId/del", collectionController.delFromCollection)
+router.put("/collection/:collectionId/product/:productId", collectionController.addToCollection)
+router.delete("/collection/:id", collectionController.deleteCollection);
 
 //sale router
 router.post("/sale", saleController.createSale);

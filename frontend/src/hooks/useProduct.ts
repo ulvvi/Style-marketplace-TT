@@ -10,6 +10,7 @@ export interface Product {
     isOutOfStock: boolean,
     variant: Variant[],
     categories: Category[]
+    collection: Collection | null
 }
 
 export interface Variant {
@@ -21,6 +22,12 @@ export interface Variant {
 }
 
 export interface Category {
+    id: number,
+    type: string
+
+}
+
+export interface Collection {
     id: number,
     type: string
 
