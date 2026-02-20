@@ -24,9 +24,9 @@ function App() {
         <BrowserRouter>
           <Header />
           <Routes>
-            <Route path="/SignIn" element={<SignIn />}/>
-            <Route path="/SignUp" element={<SignUp />}/>
-            <Route path="/SignIn" element={<Home />}/>
+            <Route path="/signIn" element={<SignIn />}/>
+            <Route path="/signUp" element={<SignUp />}/>
+            <Route path="/home" element={<Home />}/>
             <Route path="/" element={<Home />}/>
             <Route path="/ProductInfo" element={<ProductInfo />}/>
             <Route path="/Profile" element={<Profile />}/>

@@ -1,57 +1,81 @@
 import { createContext, useState, useContext, type ReactNode, useEffect } from 'react';
+import axios from 'axios';
 
-// 1. Definimos o tipo de dado do Usuário
-interface User {
-  firstName: string
-  lastName: string
+export interface User {
+  firstName: string;
+  lastName: string;
   email: string;
   picture?: string;
 }
 
-// 2. Definimos o que vai ter dentro do nosso Contexto (o "cofre")
-interface AuthContextType {
-  user: User | null;
-  signIn: (userData: User) => void;
-  signOut: () => void;
+export interface UserPayload {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  marketingEmail: boolean;
 }
 
-// Criamos o Contexto vazio
+interface AuthContextType {
+  user: User | null;
+  isLoading: boolean;
+  signIn: (userData: User) => void;
+  signOut: () => void;
+  signUp: (payload: UserPayload) => Promise<void>; 
+}
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// 3. Criamos o Provedor (O componente que guarda os dados)
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(false); 
 
   useEffect(() => {
-    // Tenta buscar o texto salvo no navegador
-    const userStorage = localStorage.getItem('usuario_logado');
+    const userStorage = localStorage.getItem('usuarioLogado');
     
     if (userStorage) {
-      // Se achou, converte de Texto para Objeto e coloca no Estado
       setUser(JSON.parse(userStorage));
     }
   }, []);
 
-  // Função para logar (salvar os dados)
+
   const signIn = (userData: User) => {
     setUser(userData);
-
-    localStorage.setItem('usuario_logado', JSON.stringify(userData));
+    localStorage.setItem('usuarioLogado', JSON.stringify(userData));
   };
+
   const signOut = () => {
     setUser(null);
-    // 3. Ao deslogar, limpamos o "HD"
-    localStorage.removeItem('usuario_logado');
+    localStorage.removeItem('usuarioLogado');
+  };
+
+  const signUp = async (payload: UserPayload) => {
+    setIsLoading(true);
+    try {
+        const response = await axios.post('/signup', payload);
+        
+        return response.data
+
+    } catch (error: any) {
+        console.error("Erro ao criar conta no backend:", error);
+        const backEndMessage = error.response?.data?.message || "";
+          if (backEndMessage.includes("Unique") || backEndMessage.includes("email")){
+            throw new Error("Email já existente"); 
+          }
+        throw new Error("Erro ao criar conta"); 
+    } finally {
+        setIsLoading(false);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, isLoading, signIn, signOut, signUp }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-// 4. Criamos um atalho (Hook) para facilitar o uso nos outros arquivos
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
