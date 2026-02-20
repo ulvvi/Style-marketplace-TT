@@ -7,7 +7,6 @@ type badgeType = 'Best Seller' | 'New' | 'Sale' | 'Premium' | 'Limited Time'
         | 'Flash Sale' | 'Luxury Sale' | 'Summer Sale' | 'Sport Sale' | 'Out Of Stock'
 interface ProductCardProps {
     product: Product;
-    category?: 'Tops'| 'Bottoms' | 'Dresses' | 'Shoes' | 'Acessories';
     productBadge?: badgeType[]
     cardStyle?: 'Home' | 'Sales'| 'Wishlist' |  'ProductInfo';
     imgSrc?: string;
@@ -16,7 +15,7 @@ interface ProductCardProps {
 
 
 
-export function ProductCard({productBadge=[], imgSrc="/src/assets/placeholder.svg", imgAlt, cardStyle, category, product}:ProductCardProps) {
+export function ProductCard({productBadge=[], imgSrc="/src/assets/placeholder.svg", imgAlt, cardStyle, product}:ProductCardProps) {
     const isHome = cardStyle === 'Home'
     const isSales = cardStyle === 'Sales'
     const isWishlist = cardStyle === 'Wishlist'
@@ -87,7 +86,7 @@ export function ProductCard({productBadge=[], imgSrc="/src/assets/placeholder.sv
                     ${isProductInfo ? "h-32 lg:" : "h-auto"}`}>
                     
                     <div className={` ${!(isHome || isProductInfo) ? 'flex justify-between' : 'hidden'}`}>
-                        <span className="font-semibold text-[0.75rem] py-0.5 border-(--border-primary) border rounded-full px-2.75">{category}</span>
+                        <span className="font-semibold text-[0.75rem] py-0.5 border-(--border-primary) border rounded-full px-2.75">{product?.categories ? product?.categories[0]?.type : ""}</span>
                         <div className="text-[0.875rem] flex items-center gap-1">
                             <img src="/src/assets/icons/starIcon.svg"></img>
                             <span className="font-semibold">{product?.rating.toFixed(1)}</span>

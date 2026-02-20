@@ -25,7 +25,7 @@ function App() {
           <CartProvider>
             <Header />
             <Routes>
-              <Route path="/" element={<Home />}/>
+              <Route path="/" element={<Sales />}/>
               <Route path="/Product/:id" element={<ProductInfo />}/>
             </Routes>
           </CartProvider>
