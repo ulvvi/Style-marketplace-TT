@@ -20,7 +20,7 @@ export function ProductInfoTabs() {
                     </button>
                 </nav>
                 <article className="flex flex-col gap-4.5 p-6 border border-(--border-primary) rounded-xl">
-                    <p>{product?.description}</p>
+                    <p className="h-4.5">{product?.description}</p>
                 </article>
             </section>
         </>
